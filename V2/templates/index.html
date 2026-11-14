@@ -23,6 +23,7 @@
                             800: '#13221B',
                             700: '#1A2E24',
                             600: '#1E352A',
+                            500: '#284638',
                         },
                         emerald: {
                             300: '#6EE7B7',
@@ -48,13 +49,14 @@
             --bg-subtle: #13221B;
             --bg-hover: #1A2E24;
             --border-hairline: #1E352A;
+            --border-glow: #2E5945;
             --ink-primary: #ECFDF5;
             --ink-secondary: #B7D9C6;
             --ink-muted: #84AE98;
             --accent-emerald: #10B981;
             --accent-emerald-bright: #34D399;
             --accent-ink: #04160E;
-            --shadow-stage: 0 28px 60px -18px rgba(0, 0, 0, 0.72), 0 8px 20px -6px rgba(0, 0, 0, 0.45);
+            --shadow-stage: 0 24px 50px -16px rgba(0, 0, 0, 0.75), 0 6px 18px -4px rgba(0, 0, 0, 0.45);
         }
 
         body {
@@ -62,32 +64,25 @@
             font-size: 16px;
             line-height: 1.6;
             background-color: var(--bg-canvas);
-            background-image: radial-gradient(ellipse 75% 45% at 50% 0%, rgba(16, 185, 129, 0.09), transparent 70%);
+            background-image: radial-gradient(ellipse 80% 40% at 50% 0%, rgba(16, 185, 129, 0.08), transparent 70%);
             color: var(--ink-primary);
             caret-color: var(--accent-emerald-bright);
             -webkit-font-smoothing: antialiased;
         }
 
         h1 {
-            font-size: clamp(2rem, 3.3vw, 2.625rem);
-            line-height: 1.22;
+            font-size: clamp(1.75rem, 2.8vw, 2.375rem);
+            line-height: 1.25;
             font-weight: 700;
             letter-spacing: -0.025em;
             text-wrap: balance;
         }
 
         h2 {
-            font-size: 1.375rem;
+            font-size: 1.25rem;
             line-height: 1.35;
             font-weight: 600;
             letter-spacing: -0.015em;
-            text-wrap: balance;
-        }
-
-        h3 {
-            font-size: 1.0625rem;
-            line-height: 1.4;
-            font-weight: 600;
         }
 
         ::selection {
@@ -96,8 +91,8 @@
         }
 
         ::-webkit-scrollbar {
-            width: 10px;
-            height: 10px;
+            width: 8px;
+            height: 8px;
         }
         ::-webkit-scrollbar-track {
             background: #070E0A;
@@ -120,88 +115,79 @@
             outline-offset: 2px;
         }
 
-        .tabular-nums {
-            font-variant-numeric: tabular-nums;
-        }
-
-        .body-measure {
-            max-width: 65ch;
-        }
-
-        .scanner-stage {
+        .studio-card {
             background-color: var(--bg-panel);
             border: 1px solid var(--border-hairline);
+            border-radius: 1rem;
             box-shadow: var(--shadow-stage);
-            padding: 1.5rem;
-        }
-        @media (min-width: 640px) {
-            .scanner-stage {
-                padding: 2rem;
-            }
         }
 
-        .crop-chip {
-            display: inline-flex;
+        /* Crop Specialist Option Card */
+        .crop-select-card {
+            display: flex;
             align-items: center;
-            justify-content: center;
-            gap: 0.4rem;
-            padding: 0.5rem 0.75rem;
-            border-radius: 0.625rem;
-            font-size: 0.8125rem;
-            font-weight: 500;
+            justify-content: space-between;
+            padding: 0.75rem 1rem;
+            border-radius: 0.75rem;
             background-color: var(--bg-subtle);
-            color: var(--ink-secondary);
             border: 1px solid var(--border-hairline);
-            transition: background-color 0.2s cubic-bezier(0.16, 1, 0.3, 1), color 0.2s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+            color: var(--ink-secondary);
+            cursor: pointer;
+            transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
         }
-        .crop-chip:hover {
+        .crop-select-card:hover {
             background-color: var(--bg-hover);
             color: var(--ink-primary);
-            border-color: #2B4B3C;
+            border-color: #2E5945;
+            transform: translateX(2px);
         }
-        input:checked + .crop-chip {
+        input:checked + .crop-select-card {
+            background-color: rgba(16, 185, 129, 0.12);
+            border-color: var(--accent-emerald);
+            color: var(--ink-primary);
+        }
+        input:checked + .crop-select-card .crop-indicator {
             background-color: var(--accent-emerald);
-            color: var(--accent-ink);
             border-color: var(--accent-emerald-bright);
-            font-weight: 700;
+            box-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
         }
 
-        /* Optical Camera Corner Brackets & Emerald Laser Scanline (Single Authored Motion) */
+        /* Optical Camera Corner Brackets & Laser Scanline */
         .scanner-dropzone {
             position: relative;
             overflow: hidden;
-            background-color: #09120D;
+            background-color: #08120D;
             border: 1.5px dashed #244033;
             border-radius: 1rem;
-            padding: 2.25rem 1.5rem;
-            transition: background-color 0.28s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.28s cubic-bezier(0.16, 1, 0.3, 1);
+            padding: 2.5rem 1.5rem;
+            transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .scanner-dropzone::before,
         .scanner-dropzone::after {
             content: "";
             position: absolute;
-            width: 20px;
-            height: 20px;
+            width: 22px;
+            height: 22px;
             pointer-events: none;
-            transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
         .scanner-dropzone::before {
-            top: 12px;
-            left: 12px;
+            top: 14px;
+            left: 14px;
             border-top: 2px solid #2E5945;
             border-left: 2px solid #2E5945;
-            border-top-left-radius: 5px;
+            border-top-left-radius: 6px;
         }
         .scanner-dropzone::after {
-            bottom: 12px;
-            right: 12px;
+            bottom: 14px;
+            right: 14px;
             border-bottom: 2px solid #2E5945;
             border-right: 2px solid #2E5945;
-            border-bottom-right-radius: 5px;
+            border-bottom-right-radius: 6px;
         }
         .scanner-dropzone:hover,
         .scanner-dropzone.drop-active {
-            background-color: #0C1913;
+            background-color: #0C1A13;
             border-color: var(--accent-emerald);
         }
         .scanner-dropzone:hover::before,
@@ -223,7 +209,7 @@
             top: -56px;
             height: 56px;
             pointer-events: none;
-            background: linear-gradient(to bottom, rgba(16, 185, 129, 0), rgba(52, 211, 153, 0.22) 88%, #6EE7B7 100%);
+            background: linear-gradient(to bottom, rgba(16, 185, 129, 0), rgba(52, 211, 153, 0.25) 85%, #6EE7B7 100%);
             border-bottom: 2px solid #6EE7B7;
             z-index: 20;
         }
@@ -240,38 +226,19 @@
             100% { top: calc(100% - 4px); }
         }
 
-        .telemetry-cell {
-            padding: 0.875rem 1rem;
-            transition: background-color 0.2s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-        .telemetry-cell:hover {
-            background-color: var(--bg-subtle);
-        }
-
-        .modal-surface {
-            background-color: var(--bg-panel);
-            border: 1px solid var(--border-hairline);
-            color: var(--ink-primary);
-            padding: 1.25rem;
-        }
-        @media (min-width: 640px) {
-            .modal-surface {
-                padding: 1.5rem;
-            }
-        }
         dialog::backdrop {
-            background: rgba(3, 8, 5, 0.78);
-            backdrop-filter: blur(5px);
+            background: rgba(3, 8, 5, 0.82);
+            backdrop-filter: blur(6px);
         }
     </style>
 </head>
-<body class="min-h-screen flex flex-col">
+<body class="min-h-screen flex flex-col justify-between">
 
     <!-- Deep Obsidian & Emerald Navbar -->
     <header class="bg-[#070E0A]/90 backdrop-blur-md border-b border-obsidian-600 sticky top-0 z-40">
-        <div class="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
+        <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
             <a href="/" class="flex items-center gap-3 group rounded-lg py-1">
-                <span class="w-9 h-9 rounded-xl bg-emerald-500 flex items-center justify-center text-emerald-950 group-hover:bg-emerald-400 transition-colors">
+                <span class="w-9 h-9 rounded-xl bg-emerald-500 flex items-center justify-center text-emerald-950 group-hover:bg-emerald-400 transition-colors shadow-sm">
                     <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                         <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"></path>
                         <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"></path>
@@ -279,7 +246,7 @@
                 </span>
                 <div class="flex items-center gap-2.5">
                     <span class="text-base sm:text-lg font-bold tracking-tight text-mint-100">AgriShield AI</span>
-                    <span class="text-[11px] font-mono font-semibold bg-obsidian-800 text-emerald-400 border border-obsidian-600 px-2 py-0.5 rounded-md">V2 · 4 Specialists</span>
+                    <span class="text-[11px] font-mono font-semibold bg-obsidian-800 text-emerald-400 border border-obsidian-600 px-2 py-0.5 rounded-md">V2 · Specialist Edition</span>
                 </div>
             </a>
 
@@ -300,319 +267,393 @@
                         <polyline points="15 3 21 3 21 9"></polyline>
                         <line x1="10" y1="14" x2="21" y2="3"></line>
                     </svg>
-                    <span>เทียบกับ V1 (8000)</span>
+                    <span>V1 Console (8000)</span>
                 </a>
             </div>
         </div>
     </header>
 
-    <!-- Main Centered AI Scanner Workspace -->
-    <main class="flex-grow max-w-4xl mx-auto px-4 sm:px-6 py-8 sm:py-11 w-full flex flex-col justify-between gap-9">
+    <!-- Main Workspace (Variation A: Split-Screen Studio) -->
+    <main class="flex-grow max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8 w-full">
 
-        <!-- Centered Hero Header -->
-        <section class="text-center max-w-2xl mx-auto" aria-label="แนะนำระบบวินิจฉัยโรคพืช">
-            <h1 class="text-mint-100 mb-3">
-                สแกนรอยโรคใบพืชแม่นยำด้วย 4 โมเดลเฉพาะทาง พร้อมชี้จุดเกิดโรคและสูตรชีวภัณฑ์
+        <!-- Top Title Bar -->
+        <div class="mb-6 text-center sm:text-left">
+            <h1 class="text-mint-100 mb-1.5">
+                ระบบผู้เชี่ยวชาญ AI วินิจฉัยโรคพืช 4 ชนิดเศรษฐกิจ
             </h1>
-            <p class="text-sm sm:text-base text-mint-300 leading-relaxed body-measure mx-auto">
-                แยกโครงข่าย <strong class="font-semibold text-mint-100">MobileNetV3 Large</strong> ตามชนิดพืชเศรษฐกิจ แสดงตำแหน่งแผลด้วย <strong class="font-semibold text-emerald-400">Grad-CAM</strong> และแนะนำสารชีวภัณฑ์ปลอดภัยตามเป้าหมาย SDG 12
+            <p class="text-sm text-mint-300">
+                สแกนวิเคราะห์รอยโรคพืชด้วยสถาปัตยกรรมโมเดลเฉพาะทาง พร้อมระบุตำแหน่งแผลด้วย Grad-CAM และแนะนำสูตรชีวภัณฑ์ปลอดภัย (SDG 12)
             </p>
-        </section>
+        </div>
 
-        <!-- Central AI Scanner Stage (Focal Point) -->
-        <section class="scanner-stage rounded-2xl w-full max-w-2xl mx-auto" aria-label="แท่นสแกนและอัปโหลดภาพใบพืช">
+        <!-- 2-Column Split-Screen Studio Layout -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
 
-            <!-- Mode Switcher Bar -->
-            <div class="flex items-center justify-between border-b border-obsidian-600 mb-5">
-                <div class="flex gap-6" role="tablist" aria-label="เลือกวิธีนำเข้าภาพใบพืช">
-                    <button type="button" id="tab-upload" role="tab" aria-selected="true" aria-controls="section-upload" onclick="switchTab('upload')" class="pb-3 px-0.5 border-b-2 border-emerald-400 text-emerald-400 text-sm font-semibold transition-colors flex items-center gap-2">
-                        <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                            <polyline points="17 8 12 3 7 8"></polyline>
-                            <line x1="12" y1="3" x2="12" y2="15"></line>
-                        </svg>
-                        <span>อัปโหลดภาพใบพืช</span>
-                    </button>
-                    <button type="button" id="tab-camera" role="tab" aria-selected="false" aria-controls="section-camera" onclick="switchTab('camera')" class="pb-3 px-0.5 border-b-2 border-transparent text-mint-500 hover:text-mint-100 text-sm font-medium transition-colors flex items-center gap-2">
-                        <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path>
-                            <circle cx="12" cy="13" r="3"></circle>
-                        </svg>
-                        <span>ถ่ายภาพสดจากกล้อง</span>
-                    </button>
-                </div>
-                <span class="hidden sm:inline text-xs font-mono text-mint-500 tabular-nums">224×224 RGB</span>
-            </div>
+            <!-- Left Column: Control Panel & Specialist Crop Selection (5 cols) -->
+            <div class="lg:col-span-5 space-y-5">
 
-            <!-- 5 Clean SVG Crop Selector Chips (Auto Default) -->
-            <div class="mb-5">
-                <div class="flex items-center justify-between mb-2.5">
-                    <span class="text-xs font-semibold text-mint-300">โมเดลพืชที่ใช้ตรวจสอบ</span>
-                    <span id="selected-crop-hint" class="text-xs text-mint-500">โหมดคัดแยกอัตโนมัติ (ครบ 23 คลาส)</span>
-                </div>
-                <div class="grid grid-cols-2 sm:grid-cols-5 gap-2" role="radiogroup" aria-label="ตัวกรองชนิดพืช">
-                    <label class="cursor-pointer col-span-2 sm:col-span-1">
-                        <input type="radio" name="crop_selector_ui" value="all" checked onchange="syncCropFilter(this.value)" class="sr-only">
-                        <span class="crop-chip w-full">
-                            <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                <path d="M3 7V5a2 2 0 0 1 2-2h2"></path>
-                                <path d="M17 3h2a2 2 0 0 1 2 2v2"></path>
-                                <path d="M21 17v2a2 2 0 0 1-2 2h-2"></path>
-                                <path d="M7 21H5a2 2 0 0 1-2-2v-2"></path>
-                                <circle cx="12" cy="12" r="3"></circle>
-                            </svg>
-                            <span>Auto</span>
-                        </span>
-                    </label>
-                    <label class="cursor-pointer">
-                        <input type="radio" name="crop_selector_ui" value="rice" onchange="syncCropFilter(this.value)" class="sr-only">
-                        <span class="crop-chip w-full">
-                            <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                <path d="M12 22V8"></path>
-                                <path d="M12 12c-2.5-2-4.5-1.5-5.5 0 1.5 1.5 3.5 1.5 5.5 0Z"></path>
-                                <path d="M12 16c2.5-2 4.5-1.5 5.5 0-1.5 1.5-3.5 1.5-5.5 0Z"></path>
-                            </svg>
-                            <span>ข้าว</span>
-                        </span>
-                    </label>
-                    <label class="cursor-pointer">
-                        <input type="radio" name="crop_selector_ui" value="corn" onchange="syncCropFilter(this.value)" class="sr-only">
-                        <span class="crop-chip w-full">
-                            <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                <path d="M12 3c-2.8 0-4.5 3.5-4.5 8.5 0 3.2 1.8 5.5 4.5 5.5s4.5-2.3 4.5-5.5C16.5 6.5 14.8 3 12 3Z"></path>
-                                <path d="M12 17v4"></path>
-                            </svg>
-                            <span>ข้าวโพด</span>
-                        </span>
-                    </label>
-                    <label class="cursor-pointer">
-                        <input type="radio" name="crop_selector_ui" value="potato" onchange="syncCropFilter(this.value)" class="sr-only">
-                        <span class="crop-chip w-full">
-                            <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                <path d="M8 5c5-1.5 9.5 1 10.5 5.5 1 4.5-2.5 8.5-7.5 9.5-4.5 1-7.5-2-8-6.5C2.5 9 4.5 6 8 5Z"></path>
-                                <path d="M11 9.5h.01"></path>
-                            </svg>
-                            <span>มันฝรั่ง</span>
-                        </span>
-                    </label>
-                    <label class="cursor-pointer">
-                        <input type="radio" name="crop_selector_ui" value="tomato" onchange="syncCropFilter(this.value)" class="sr-only">
-                        <span class="crop-chip w-full">
-                            <svg class="w-3.5 h-3.5 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                <circle cx="12" cy="13" r="7"></circle>
-                                <path d="M12 6V3"></path>
-                            </svg>
-                            <span>มะเขือเทศ</span>
-                        </span>
-                    </label>
-                </div>
-            </div>
-
-            <!-- Validation Error Banner -->
-            <div id="validation-error" role="alert" class="hidden mb-4 py-3 px-4 rounded-xl bg-[#2A0E13] text-[#FECDD3] flex items-start gap-2.5 text-sm">
-                <svg class="w-4 h-4 text-[#FDA4AF] shrink-0 mt-1" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <circle cx="12" cy="12" r="10"></circle>
-                    <line x1="12" y1="8" x2="12" y2="12"></line>
-                    <line x1="12" y1="16" x2="12.01" y2="16"></line>
-                </svg>
-                <p id="validation-error-text" class="font-medium text-[#FFE4E6] text-xs sm:text-sm"></p>
-            </div>
-
-            <!-- Mode 1: File Upload Form -->
-            <div id="section-upload" role="tabpanel" aria-labelledby="tab-upload">
-                <form id="upload-form" action="/predict" method="post" enctype="multipart/form-data" onsubmit="handleUploadSubmit(event)">
-                    <input type="hidden" id="upload-crop-filter" name="crop_filter" value="all">
-                    <input type="file" id="file-input" name="file" accept="image/jpeg,image/png,image/webp" class="sr-only" onchange="previewSelectedFile(event)">
-
-                    <div id="drop-zone" role="button" tabindex="0" aria-label="คลิกเพื่อเลือกไฟล์ภาพใบพืช หรือลากไฟล์มาวางที่นี่"
-                         onkeydown="handleDropZoneKey(event)"
-                         class="scanner-dropzone text-center cursor-pointer">
-
-                        <!-- Optical Emerald Laser Beam (Activates on Diagnose Submit) -->
-                        <div class="scan-beam" aria-hidden="true"></div>
-
-                        <!-- Empty Prompt State -->
-                        <div id="upload-prompt" class="space-y-2.5 max-w-sm mx-auto py-2">
-                            <span class="w-12 h-12 mx-auto rounded-full bg-obsidian-800 text-emerald-400 flex items-center justify-center">
-                                <svg class="w-6 h-6" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                    <path d="M3 7V5a2 2 0 0 1 2-2h2"></path>
-                                    <path d="M17 3h2a2 2 0 0 1 2 2v2"></path>
-                                    <path d="M21 17v2a2 2 0 0 1-2 2h-2"></path>
-                                    <path d="M7 21H5a2 2 0 0 1-2-2v-2"></path>
-                                    <circle cx="12" cy="12" r="3"></circle>
-                                </svg>
-                            </span>
-                            <h2 class="text-mint-100">คลิกเลือกภาพใบพืช หรือลากไฟล์มาวางในกรอบสแกน</h2>
-                            <p class="text-xs text-mint-500 leading-relaxed">
-                                รองรับไฟล์ JPG, PNG, WEBP แนะนำให้เห็นแผ่นใบและลักษณะแผลชัดเจนโดยไม่ย้อนแสง
-                            </p>
+                <!-- Section 1: Crop Selection Card -->
+                <div class="studio-card p-5">
+                    <div class="flex items-center justify-between mb-3 border-b border-obsidian-600 pb-2.5">
+                        <div class="flex items-center gap-2">
+                            <span class="w-6 h-6 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs font-bold">1</span>
+                            <h2 class="text-sm font-semibold text-mint-100">เลือกโมเดลพืชเฉพาะทาง</h2>
                         </div>
+                        <span id="selected-crop-badge" class="text-[11px] font-mono font-medium text-emerald-400 bg-obsidian-800 px-2 py-0.5 rounded border border-obsidian-600">Auto Active</span>
+                    </div>
 
-                        <!-- Selected Image Preview State -->
-                        <div id="preview-box" class="hidden space-y-3 relative z-10">
-                            <img id="image-preview" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="ตัวอย่างภาพใบพืชที่เลือกไว้" class="max-h-60 mx-auto rounded-lg object-contain border border-obsidian-600">
-                            <div class="flex flex-wrap items-center justify-center gap-3">
-                                <span id="preview-filename" class="text-xs text-mint-300 font-mono"></span>
-                                <button type="button" id="btn-reset-file" onclick="resetUpload(event)" class="text-xs text-emerald-400 hover:text-emerald-300 underline font-semibold transition-colors">
-                                    เปลี่ยนภาพใหม่
-                                </button>
+                    <p class="text-xs text-mint-500 mb-3.5 leading-relaxed">
+                        เลือกชนิดพืชเพื่อให้ระบบใช้โมเดลผู้เชี่ยวชาญเฉพาะทาง หรือใช้โหมด Auto เพื่อคัดแยกอัตโนมัติ:
+                    </p>
+
+                    <!-- Crop Options List (No Accuracy Percentage) -->
+                    <div class="space-y-2" role="radiogroup" aria-label="ตัวกรองชนิดพืช">
+                        <!-- Auto Option -->
+                        <label class="block">
+                            <input type="radio" name="crop_selector_ui" value="all" checked onchange="syncCropFilter(this.value)" class="sr-only">
+                            <div class="crop-select-card">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-lg bg-obsidian-800 border border-obsidian-600 flex items-center justify-center text-mint-300">
+                                        <svg class="w-4 h-4 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                            <path d="M3 7V5a2 2 0 0 1 2-2h2"></path>
+                                            <path d="M17 3h2a2 2 0 0 1 2 2v2"></path>
+                                            <path d="M21 17v2a2 2 0 0 1-2 2h-2"></path>
+                                            <path d="M7 21H5a2 2 0 0 1-2-2v-2"></path>
+                                            <circle cx="12" cy="12" r="3"></circle>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="text-xs font-semibold text-mint-100">คัดแยกอัตโนมัติ (Auto Detect)</div>
+                                        <div class="text-[11px] text-mint-500">ครอบคลุมทั้ง 23 คลาสโรคพืช</div>
+                                    </div>
+                                </div>
+                                <div class="w-4 h-4 rounded-full border border-obsidian-500 crop-indicator"></div>
                             </div>
-                        </div>
-                    </div>
+                        </label>
 
-                    <!-- 1-Click Real Field Sample Strip -->
-                    <div class="mt-4 pt-3.5 border-t border-obsidian-600 flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
-                        <span class="text-xs font-medium text-mint-500 shrink-0">ลองภาพตัวอย่างแปลงจริง:</span>
-                        <div class="flex flex-wrap items-center gap-2">
-                            <button type="button" onclick="loadSampleLeaf('/static/samples/sample_rice.jpg', 'rice', 'sample_rice_brown_spot.jpg')" class="inline-flex items-center gap-1.5 pr-2.5 pl-1 py-1 rounded-full bg-obsidian-800 hover:bg-obsidian-700 border border-obsidian-600 text-xs font-medium text-mint-300 hover:text-mint-100 transition-colors">
-                                <img src="/static/samples/sample_rice.jpg" alt="ตัวอย่างใบข้าว" class="w-5 h-5 rounded-full object-cover">
-                                <span>ใบข้าว</span>
-                            </button>
-                            <button type="button" onclick="loadSampleLeaf('/static/samples/sample_corn.jpg', 'corn', 'sample_corn_gray_spot.jpg')" class="inline-flex items-center gap-1.5 pr-2.5 pl-1 py-1 rounded-full bg-obsidian-800 hover:bg-obsidian-700 border border-obsidian-600 text-xs font-medium text-mint-300 hover:text-mint-100 transition-colors">
-                                <img src="/static/samples/sample_corn.jpg" alt="ตัวอย่างใบข้าวโพด" class="w-5 h-5 rounded-full object-cover">
-                                <span>ใบข้าวโพด</span>
-                            </button>
-                            <button type="button" onclick="loadSampleLeaf('/static/samples/sample_potato.jpg', 'potato', 'sample_potato_blight.jpg')" class="inline-flex items-center gap-1.5 pr-2.5 pl-1 py-1 rounded-full bg-obsidian-800 hover:bg-obsidian-700 border border-obsidian-600 text-xs font-medium text-mint-300 hover:text-mint-100 transition-colors">
-                                <img src="/static/samples/sample_potato.jpg" alt="ตัวอย่างใบมันฝรั่ง" class="w-5 h-5 rounded-full object-cover">
-                                <span>ใบมันฝรั่ง</span>
-                            </button>
-                            <button type="button" onclick="loadSampleLeaf('/static/samples/sample_tomato.jpg?v=2', 'tomato', 'sample_tomato_tylcv.jpg')" class="inline-flex items-center gap-1.5 pr-2.5 pl-1 py-1 rounded-full bg-obsidian-800 hover:bg-obsidian-700 border border-obsidian-600 text-xs font-medium text-mint-300 hover:text-mint-100 transition-colors">
-                                <img src="/static/samples/sample_tomato.jpg?v=2" alt="ตัวอย่างใบมะเขือเทศ" class="w-5 h-5 rounded-full object-cover">
-                                <span>ใบมะเขือเทศ</span>
-                            </button>
-                        </div>
-                    </div>
+                        <!-- Rice Option -->
+                        <label class="block">
+                            <input type="radio" name="crop_selector_ui" value="rice" onchange="syncCropFilter(this.value)" class="sr-only">
+                            <div class="crop-select-card">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-lg bg-obsidian-800 border border-obsidian-600 flex items-center justify-center text-mint-300">
+                                        <svg class="w-4 h-4 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                            <path d="M12 22V8"></path>
+                                            <path d="M12 12c-2.5-2-4.5-1.5-5.5 0 1.5 1.5 3.5 1.5 5.5 0Z"></path>
+                                            <path d="M12 16c2.5-2 4.5-1.5 5.5 0-1.5 1.5-3.5 1.5-5.5 0Z"></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="text-xs font-semibold text-mint-100">ข้าว (Rice Specialist)</div>
+                                        <div class="text-[11px] text-mint-500">6 คลาส (ขอบใบแห้ง, ใบจุดสีน้ำตาล, โรคไหม้ ฯลฯ)</div>
+                                    </div>
+                                </div>
+                                <div class="w-4 h-4 rounded-full border border-obsidian-500 crop-indicator"></div>
+                            </div>
+                        </label>
 
-                    <!-- Primary Emerald CTA Bar -->
-                    <div class="mt-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-                        <p id="upload-status-hint" class="text-xs text-mint-500">
-                            รักษาสีจริงของรอยโรคตามหลักชีววิทยา ไม่ดัดแปลงค่าสีภาพ
-                        </p>
-                        <button type="submit" id="btn-submit-upload" disabled
-                                class="w-full sm:w-auto px-6 py-3 bg-obsidian-800 text-mint-500 border border-obsidian-600 font-semibold rounded-xl text-sm cursor-not-allowed transition-all flex items-center justify-center gap-2 shrink-0">
-                            <svg id="icon-submit-search" class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                                <circle cx="11" cy="11" r="8"></circle>
-                                <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        <!-- Corn Option -->
+                        <label class="block">
+                            <input type="radio" name="crop_selector_ui" value="corn" onchange="syncCropFilter(this.value)" class="sr-only">
+                            <div class="crop-select-card">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-lg bg-obsidian-800 border border-obsidian-600 flex items-center justify-center text-mint-300">
+                                        <svg class="w-4 h-4 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                            <path d="M12 3c-2.8 0-4.5 3.5-4.5 8.5 0 3.2 1.8 5.5 4.5 5.5s4.5-2.3 4.5-5.5C16.5 6.5 14.8 3 12 3Z"></path>
+                                            <path d="M12 17v4"></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="text-xs font-semibold text-mint-100">ข้าวโพด (Corn Specialist)</div>
+                                        <div class="text-[11px] text-mint-500">4 คลาส (ราสนิม, ใบจุดสีเทา, ใบไหม้แผลใหญ่ ฯลฯ)</div>
+                                    </div>
+                                </div>
+                                <div class="w-4 h-4 rounded-full border border-obsidian-500 crop-indicator"></div>
+                            </div>
+                        </label>
+
+                        <!-- Potato Option -->
+                        <label class="block">
+                            <input type="radio" name="crop_selector_ui" value="potato" onchange="syncCropFilter(this.value)" class="sr-only">
+                            <div class="crop-select-card">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-lg bg-obsidian-800 border border-obsidian-600 flex items-center justify-center text-mint-300">
+                                        <svg class="w-4 h-4 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                            <path d="M8 5c5-1.5 9.5 1 10.5 5.5 1 4.5-2.5 8.5-7.5 9.5-4.5 1-7.5-2-8-6.5C2.5 9 4.5 6 8 5Z"></path>
+                                            <path d="M11 9.5h.01"></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="text-xs font-semibold text-mint-100">มันฝรั่ง (Potato Specialist)</div>
+                                        <div class="text-[11px] text-mint-500">3 คลาส (ใบไหม้เช้า, ใบไหม้สาย, ใบปกติ)</div>
+                                    </div>
+                                </div>
+                                <div class="w-4 h-4 rounded-full border border-obsidian-500 crop-indicator"></div>
+                            </div>
+                        </label>
+
+                        <!-- Tomato Option -->
+                        <label class="block">
+                            <input type="radio" name="crop_selector_ui" value="tomato" onchange="syncCropFilter(this.value)" class="sr-only">
+                            <div class="crop-select-card">
+                                <div class="flex items-center gap-3">
+                                    <div class="w-8 h-8 rounded-lg bg-obsidian-800 border border-obsidian-600 flex items-center justify-center text-mint-300">
+                                        <svg class="w-4 h-4 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                            <circle cx="12" cy="13" r="7"></circle>
+                                            <path d="M12 6V3"></path>
+                                        </svg>
+                                    </div>
+                                    <div>
+                                        <div class="text-xs font-semibold text-mint-100">มะเขือเทศ (Tomato Specialist)</div>
+                                        <div class="text-[11px] text-mint-500">10 คลาส (ใบจุดแบคทีเรีย, ไวรัสใบหงิกเหลือง ฯลฯ)</div>
+                                    </div>
+                                </div>
+                                <div class="w-4 h-4 rounded-full border border-obsidian-500 crop-indicator"></div>
+                            </div>
+                        </label>
+                    </div>
+                </div>
+
+                <!-- Section 2: Quick Field Samples Card -->
+                <div class="studio-card p-4">
+                    <div class="flex items-center justify-between mb-2.5">
+                        <span class="text-xs font-semibold text-mint-300 flex items-center gap-1.5">
+                            <svg class="w-3.5 h-3.5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect width="18" height="18" x="3" y="3" rx="2" ry="2"></rect>
+                                <circle cx="9" cy="9" r="2"></circle>
+                                <path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"></path>
                             </svg>
-                            <svg id="icon-submit-spinner" class="hidden w-4 h-4 shrink-0 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" aria-hidden="true">
-                                <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
-                            </svg>
-                            <span id="btn-submit-label">เริ่มการวินิจฉัยโรคพืช</span>
+                            <span>ทดสอบด่วนด้วยภาพแปลงจริง (1-Click Test):</span>
+                        </span>
+                    </div>
+                    <div class="grid grid-cols-2 gap-2">
+                        <button type="button" onclick="loadSampleLeaf('/static/samples/sample_rice.jpg', 'rice', 'sample_rice_brown_spot.jpg')" class="inline-flex items-center gap-2 p-1.5 rounded-lg bg-obsidian-800 hover:bg-obsidian-700 border border-obsidian-600 text-xs font-medium text-mint-200 transition-colors">
+                            <img src="/static/samples/sample_rice.jpg" alt="ตัวอย่างใบข้าว" class="w-7 h-7 rounded-md object-cover border border-obsidian-600">
+                            <div class="text-left">
+                                <div class="font-medium text-mint-100">ใบข้าว</div>
+                                <div class="text-[10px] text-mint-500">จุดสีน้ำตาล</div>
+                            </div>
+                        </button>
+                        <button type="button" onclick="loadSampleLeaf('/static/samples/sample_corn.jpg', 'corn', 'sample_corn_gray_spot.jpg')" class="inline-flex items-center gap-2 p-1.5 rounded-lg bg-obsidian-800 hover:bg-obsidian-700 border border-obsidian-600 text-xs font-medium text-mint-200 transition-colors">
+                            <img src="/static/samples/sample_corn.jpg" alt="ตัวอย่างใบข้าวโพด" class="w-7 h-7 rounded-md object-cover border border-obsidian-600">
+                            <div class="text-left">
+                                <div class="font-medium text-mint-100">ใบข้าวโพด</div>
+                                <div class="text-[10px] text-mint-500">จุดสีเทา</div>
+                            </div>
+                        </button>
+                        <button type="button" onclick="loadSampleLeaf('/static/samples/sample_potato.jpg', 'potato', 'sample_potato_blight.jpg')" class="inline-flex items-center gap-2 p-1.5 rounded-lg bg-obsidian-800 hover:bg-obsidian-700 border border-obsidian-600 text-xs font-medium text-mint-200 transition-colors">
+                            <img src="/static/samples/sample_potato.jpg" alt="ตัวอย่างใบมันฝรั่ง" class="w-7 h-7 rounded-md object-cover border border-obsidian-600">
+                            <div class="text-left">
+                                <div class="font-medium text-mint-100">ใบมันฝรั่ง</div>
+                                <div class="text-[10px] text-mint-500">ใบไหม้สาย</div>
+                            </div>
+                        </button>
+                        <button type="button" onclick="loadSampleLeaf('/static/samples/sample_tomato.jpg?v=2', 'tomato', 'sample_tomato_tylcv.jpg')" class="inline-flex items-center gap-2 p-1.5 rounded-lg bg-obsidian-800 hover:bg-obsidian-700 border border-obsidian-600 text-xs font-medium text-mint-200 transition-colors">
+                            <img src="/static/samples/sample_tomato.jpg?v=2" alt="ตัวอย่างใบมะเขือเทศ" class="w-7 h-7 rounded-md object-cover border border-obsidian-600">
+                            <div class="text-left">
+                                <div class="font-medium text-mint-100">ใบมะเขือเทศ</div>
+                                <div class="text-[10px] text-mint-500">หงิกเหลือง</div>
+                            </div>
                         </button>
                     </div>
-                </form>
-            </div>
-
-            <!-- Mode 2: Live Camera Capture -->
-            <div id="section-camera" role="tabpanel" aria-labelledby="tab-camera" class="hidden space-y-4">
-                <div class="relative bg-[#040806] rounded-xl overflow-hidden max-w-sm mx-auto aspect-square flex items-center justify-center">
-                    <video id="camera-stream" autoplay playsinline class="w-full h-full object-cover"></video>
-                    <canvas id="camera-canvas" class="hidden"></canvas>
-
-                    <div id="camera-loading" class="absolute inset-0 flex flex-col items-center justify-center text-mint-300 bg-[#070E0A]/95 text-sm px-6 text-center gap-3">
-                        <svg class="w-7 h-7 text-emerald-400 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
-                            <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
-                        </svg>
-                        <span>กำลังขอสิทธิ์เชื่อมต่อกล้องถ่ายภาพ...</span>
-                    </div>
                 </div>
 
-                <div class="flex flex-wrap justify-center gap-3">
-                    <button type="button" id="btn-snap" onclick="captureSnapshot()" class="px-6 py-3 bg-emerald-500 hover:bg-emerald-400 text-emerald-950 font-bold rounded-xl text-sm transition-colors flex items-center gap-2">
-                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path>
-                            <circle cx="12" cy="13" r="3"></circle>
-                        </svg>
-                        <span id="btn-snap-label">ถ่ายภาพนี้เพื่อวินิจฉัย</span>
-                    </button>
-                    <button type="button" id="btn-retake" onclick="startCamera()" class="hidden px-5 py-3 bg-obsidian-800 hover:bg-obsidian-700 border border-obsidian-600 text-mint-100 font-semibold rounded-xl text-sm transition-colors flex items-center gap-2">
-                        <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                            <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
-                            <path d="M3 3v5h5"></path>
-                        </svg>
-                        <span>รีเซ็ตกล้องใหม่</span>
-                    </button>
+                <!-- Section 3: Diagnostic Standards Info Pill -->
+                <div class="rounded-xl bg-[#09150F] border border-obsidian-600 p-3.5 text-xs text-mint-500 flex items-start gap-2.5">
+                    <svg class="w-4 h-4 text-emerald-400 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <line x1="12" y1="16" x2="12" y2="12"></line>
+                        <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                    </svg>
+                    <p class="leading-relaxed">
+                        <strong class="font-semibold text-mint-300">มาตรฐานชีวภาพ:</strong> ทุกผลลัพธ์จะแสดงภาพแผนที่ความร้อน <span class="text-emerald-400 font-medium">Grad-CAM</span> พร้อมสูตรสารชีวภัณฑ์ (<span class="text-mint-200">ไตรโคเดอร์มา / บาซิลลัส</span>) ปลอดสารพิษตกค้างตามเป้าหมาย SDG 12
+                    </p>
                 </div>
 
-                <form id="snapshot-form" action="/predict" method="post" enctype="multipart/form-data" class="hidden">
-                    <input type="hidden" id="camera-crop-filter" name="crop_filter" value="all">
-                    <input type="file" id="snapshot-file-input" name="file">
-                </form>
             </div>
 
-        </section>
+            <!-- Right Column: AI Scanner & Image Input Stage (7 cols) -->
+            <div class="lg:col-span-7">
 
-        <!-- Bottom 4-Specialist Telemetry Dock Strip -->
-        <section class="w-full" aria-label="ความแม่นยำของโมเดลเฉพาะทางทั้ง 4 ชนิดพืช">
-            <div class="border-t border-b border-obsidian-600 grid grid-cols-2 sm:grid-cols-4 divide-y sm:divide-y-0 divide-x divide-obsidian-600">
-                <button type="button" onclick="selectCropFromList('rice')" class="telemetry-cell text-left flex flex-col justify-between gap-1">
-                    <div class="flex items-center justify-between w-full">
-                        <span class="text-xs font-semibold text-mint-100">ข้าว (Rice)</span>
-                        <span class="text-xs font-mono font-semibold text-emerald-400 tabular-nums">97.76%</span>
-                    </div>
-                    <span class="text-xs text-mint-500">6 คลาส · Unseen Test</span>
-                </button>
+                <div class="studio-card p-5 sm:p-6">
 
-                <button type="button" onclick="selectCropFromList('corn')" class="telemetry-cell text-left flex flex-col justify-between gap-1">
-                    <div class="flex items-center justify-between w-full">
-                        <span class="text-xs font-semibold text-mint-100">ข้าวโพด (Corn)</span>
-                        <span class="text-xs font-mono font-semibold text-emerald-400 tabular-nums">97.77%</span>
-                    </div>
-                    <span class="text-xs text-mint-500">4 คลาส · Unseen Test</span>
-                </button>
+                    <!-- Header & Mode Tabs -->
+                    <div class="flex items-center justify-between border-b border-obsidian-600 pb-3 mb-5">
+                        <div class="flex items-center gap-2">
+                            <span class="w-6 h-6 rounded-md bg-emerald-500/10 border border-emerald-500/20 text-emerald-400 flex items-center justify-center text-xs font-bold">2</span>
+                            <h2 class="text-sm font-semibold text-mint-100">นำเข้าภาพใบพืชเพื่อวิเคราะห์</h2>
+                        </div>
 
-                <button type="button" onclick="selectCropFromList('potato')" class="telemetry-cell text-left flex flex-col justify-between gap-1">
-                    <div class="flex items-center justify-between w-full">
-                        <span class="text-xs font-semibold text-mint-100">มันฝรั่ง (Potato)</span>
-                        <span class="text-xs font-mono font-semibold text-emerald-400 tabular-nums">100.00%</span>
+                        <!-- Mode Switch Tabs -->
+                        <div class="flex gap-4" role="tablist" aria-label="เลือกวิธีนำเข้าภาพใบพืช">
+                            <button type="button" id="tab-upload" role="tab" aria-selected="true" aria-controls="section-upload" onclick="switchTab('upload')" class="pb-1.5 px-0.5 border-b-2 border-emerald-400 text-emerald-400 text-xs sm:text-sm font-semibold transition-colors flex items-center gap-1.5">
+                                <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <polyline points="17 8 12 3 7 8"></polyline>
+                                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                                </svg>
+                                <span>อัปโหลดไฟล์ภาพ</span>
+                            </button>
+                            <button type="button" id="tab-camera" role="tab" aria-selected="false" aria-controls="section-camera" onclick="switchTab('camera')" class="pb-1.5 px-0.5 border-b-2 border-transparent text-mint-500 hover:text-mint-100 text-xs sm:text-sm font-medium transition-colors flex items-center gap-1.5">
+                                <svg class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path>
+                                    <circle cx="12" cy="13" r="3"></circle>
+                                </svg>
+                                <span>ถ่ายภาพจากกล้อง</span>
+                            </button>
+                        </div>
                     </div>
-                    <span class="text-xs text-mint-500">3 คลาส · Unseen Test</span>
-                </button>
 
-                <button type="button" onclick="selectCropFromList('tomato')" class="telemetry-cell text-left flex flex-col justify-between gap-1">
-                    <div class="flex items-center justify-between w-full">
-                        <span class="text-xs font-semibold text-mint-100">มะเขือเทศ (Tomato)</span>
-                        <span class="text-xs font-mono font-semibold text-emerald-400 tabular-nums">99.85%</span>
+                    <!-- Validation Error Banner -->
+                    <div id="validation-error" role="alert" class="hidden mb-4 py-3 px-4 rounded-xl bg-[#2A0E13] text-[#FECDD3] flex items-start gap-2.5 text-sm">
+                        <svg class="w-4 h-4 text-[#FDA4AF] shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <circle cx="12" cy="12" r="10"></circle>
+                            <line x1="12" y1="8" x2="12" y2="12"></line>
+                            <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                        </svg>
+                        <p id="validation-error-text" class="font-medium text-[#FFE4E6] text-xs sm:text-sm"></p>
                     </div>
-                    <span class="text-xs text-mint-500">10 คลาส · Unseen Test</span>
-                </button>
+
+                    <!-- Mode 1: File Upload Form -->
+                    <div id="section-upload" role="tabpanel" aria-labelledby="tab-upload">
+                        <form id="upload-form" action="/predict" method="post" enctype="multipart/form-data" onsubmit="handleUploadSubmit(event)">
+                            <input type="hidden" id="upload-crop-filter" name="crop_filter" value="all">
+                            <input type="file" id="file-input" name="file" accept="image/jpeg,image/png,image/webp" class="sr-only" onchange="previewSelectedFile(event)">
+
+                            <div id="drop-zone" role="button" tabindex="0" aria-label="คลิกเพื่อเลือกไฟล์ภาพใบพืช หรือลากไฟล์มาวางที่นี่"
+                                 onkeydown="handleDropZoneKey(event)"
+                                 class="scanner-dropzone text-center cursor-pointer min-h-[320px] flex flex-col items-center justify-center">
+
+                                <!-- Optical Emerald Laser Beam (Activates on Diagnose Submit) -->
+                                <div class="scan-beam" aria-hidden="true"></div>
+
+                                <!-- Empty Prompt State -->
+                                <div id="upload-prompt" class="space-y-3 max-w-sm mx-auto py-4">
+                                    <span class="w-14 h-14 mx-auto rounded-2xl bg-obsidian-800 text-emerald-400 flex items-center justify-center border border-obsidian-600 shadow-inner">
+                                        <svg class="w-7 h-7" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                            <path d="M3 7V5a2 2 0 0 1 2-2h2"></path>
+                                            <path d="M17 3h2a2 2 0 0 1 2 2v2"></path>
+                                            <path d="M21 17v2a2 2 0 0 1-2 2h-2"></path>
+                                            <path d="M7 21H5a2 2 0 0 1-2-2v-2"></path>
+                                            <circle cx="12" cy="12" r="3"></circle>
+                                        </svg>
+                                    </span>
+                                    <h3 class="text-base font-semibold text-mint-100">คลิกเลือกภาพใบพืช หรือลากไฟล์มาวางในกรอบนี้</h3>
+                                    <p class="text-xs text-mint-500 leading-relaxed">
+                                        รองรับไฟล์ JPG, PNG, WEBP แนะนำภาพถ่ายใบเดี่ยวหรือเห็นรอยโรคชัดเจนภายใต้แสงธรรมชาติ
+                                    </p>
+                                    <div class="pt-2">
+                                        <span class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg bg-obsidian-800 border border-obsidian-600 text-xs font-semibold text-mint-200">
+                                            <svg class="w-3.5 h-3.5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                                <polyline points="17 8 12 3 7 8"></polyline>
+                                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                                            </svg>
+                                            <span>เลือกไฟล์จากเครื่อง</span>
+                                        </span>
+                                    </div>
+                                </div>
+
+                                <!-- Selected Image Preview State -->
+                                <div id="preview-box" class="hidden space-y-3 relative z-10 w-full">
+                                    <img id="image-preview" src="data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///yH5BAEAAAAALAAAAAABAAEAAAIBRAA7" alt="ตัวอย่างภาพใบพืชที่เลือกไว้" class="max-h-64 mx-auto rounded-xl object-contain border border-obsidian-600 shadow-md">
+                                    <div class="flex flex-wrap items-center justify-center gap-3">
+                                        <span id="preview-filename" class="text-xs text-mint-300 font-mono bg-obsidian-900 px-2.5 py-1 rounded border border-obsidian-600"></span>
+                                        <button type="button" id="btn-reset-file" onclick="resetUpload(event)" class="text-xs text-emerald-400 hover:text-emerald-300 underline font-semibold transition-colors">
+                                            เปลี่ยนภาพใหม่
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Primary Action Bar -->
+                            <div class="mt-5 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+                                <p id="upload-status-hint" class="text-xs text-mint-500">
+                                    รักษาสีจริงของรอยโรคตามหลักชีววิทยา ไม่ดัดแปลงค่าสีภาพ
+                                </p>
+                                <button type="submit" id="btn-submit-upload" disabled
+                                        class="w-full sm:w-auto px-6 py-3 bg-obsidian-800 text-mint-500 border border-obsidian-600 font-semibold rounded-xl text-sm cursor-not-allowed transition-all flex items-center justify-center gap-2 shrink-0">
+                                    <svg id="icon-submit-search" class="w-4 h-4 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                        <circle cx="11" cy="11" r="8"></circle>
+                                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                                    </svg>
+                                    <svg id="icon-submit-spinner" class="hidden w-4 h-4 shrink-0 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.25" stroke-linecap="round" aria-hidden="true">
+                                        <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
+                                    </svg>
+                                    <span id="btn-submit-label">เริ่มการวินิจฉัยโรคพืช</span>
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+
+                    <!-- Mode 2: Live Camera Capture -->
+                    <div id="section-camera" role="tabpanel" aria-labelledby="tab-camera" class="hidden space-y-4">
+                        <div class="relative bg-[#040806] rounded-xl overflow-hidden max-w-sm mx-auto aspect-square flex items-center justify-center border border-obsidian-600">
+                            <video id="camera-stream" autoplay playsinline class="w-full h-full object-cover"></video>
+                            <canvas id="camera-canvas" class="hidden"></canvas>
+
+                            <div id="camera-loading" class="absolute inset-0 flex flex-col items-center justify-center text-mint-300 bg-[#070E0A]/95 text-sm px-6 text-center gap-3">
+                                <svg class="w-7 h-7 text-emerald-400 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
+                                    <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
+                                </svg>
+                                <span>กำลังขอสิทธิ์เชื่อมต่อกล้องถ่ายภาพ...</span>
+                            </div>
+                        </div>
+
+                        <div class="flex flex-wrap justify-center gap-3">
+                            <button type="button" id="btn-snap" onclick="captureSnapshot()" class="px-6 py-3 bg-emerald-500 hover:bg-emerald-400 text-emerald-950 font-bold rounded-xl text-sm transition-colors flex items-center gap-2">
+                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path>
+                                    <circle cx="12" cy="13" r="3"></circle>
+                                </svg>
+                                <span id="btn-snap-label">ถ่ายภาพนี้เพื่อวินิจฉัย</span>
+                            </button>
+                            <button type="button" id="btn-retake" onclick="startCamera()" class="hidden px-5 py-3 bg-obsidian-800 hover:bg-obsidian-700 border border-obsidian-600 text-mint-100 font-semibold rounded-xl text-sm transition-colors flex items-center gap-2">
+                                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                                    <path d="M3 3v5h5"></path>
+                                </svg>
+                                <span>เปิดกล้องใหม่</span>
+                            </button>
+                        </div>
+
+                        <form id="snapshot-form" action="/predict" method="post" enctype="multipart/form-data" class="hidden">
+                            <input type="hidden" id="camera-crop-filter" name="crop_filter" value="all">
+                            <input type="file" id="snapshot-file-input" name="file">
+                        </form>
+                    </div>
+
+                </div>
+
             </div>
 
-            <div class="mt-3 flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-mint-500">
-                <p class="tabular-nums">
-                    ฝึกสอนแบบ Stratified 70:15:15 · แจ้งเตือนโรคอันดับรองอัตโนมัติเมื่อความมั่นใจต่ำกว่า 85%
-                </p>
-                <button type="button" onclick="openMatrixModal()" class="text-emerald-400 hover:text-emerald-300 underline font-semibold shrink-0">
-                    เปิดดูตาราง Confusion Matrix ทั้ง 4 โมเดล
-                </button>
-            </div>
-        </section>
+        </div>
 
     </main>
 
     <!-- Minimal Dark Obsidian Footer -->
-    <footer class="border-t border-obsidian-600 bg-[#050A07] py-4 px-4 text-xs text-mint-500">
-        <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+    <footer class="border-t border-obsidian-600 bg-[#050A07] py-4 px-4 text-xs text-mint-500 mt-8">
+        <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
             <p class="font-medium text-mint-300">โครงงานบูรณาการ 4 รายวิชา (CSI410, CSI411, CSI413, CSI414) ปีการศึกษา 2569</p>
             <p>กลุ่มที่ 32: ศิวัตม์ แก้วหนองแสง & ธนวรรธน์ ณรงค์วงศ์วัฒนา · ที่ปรึกษา: ผศ.ดร. วรพงศ์ รังสีเกษมกุล</p>
         </div>
     </footer>
 
     <!-- Confusion Matrix Lightbox Modal -->
-    <dialog id="matrix-modal" class="modal-surface rounded-2xl max-w-5xl w-[94vw] shadow-2xl">
-        <div class="pb-4 mb-4 border-b border-obsidian-600 flex items-center justify-between gap-4">
+    <dialog id="matrix-modal" class="modal-surface rounded-2xl max-w-5xl w-[94vw] shadow-2xl bg-[#0D1712] border border-[#1E352A] text-[#ECFDF5] p-5">
+        <div class="pb-3 mb-3 border-b border-obsidian-600 flex items-center justify-between gap-4">
             <div>
-                <h2 class="text-mint-100">Confusion Matrices — 4 Crop Specialist Models (70:15:15)</h2>
-                <p class="text-xs text-mint-500 tabular-nums">ผลทดสอบบนชุดข้อมูลไม่เคยเห็นมาก่อน (Unseen Hold-out Test Set 15%) แยกตามชนิดพืชทั้ง 4 โมเดล</p>
+                <h2 class="text-sm sm:text-base font-bold text-mint-100">Confusion Matrices — 4 Crop Specialist Models</h2>
+                <p class="text-xs text-mint-500">การกระจายตัวของผลการทดสอบแยกตาม 4 โมเดลผู้เชี่ยวชาญ (Rice, Corn, Potato, Tomato)</p>
             </div>
-            <button type="button" onclick="closeMatrixModal()" aria-label="ปิดหน้าต่าง Confusion Matrix" class="p-2 rounded-lg text-mint-300 hover:text-mint-100 hover:bg-obsidian-800 transition-colors">
+            <button type="button" onclick="closeMatrixModal()" aria-label="ปิดหน้าต่าง Confusion Matrix" class="p-1.5 rounded-lg text-mint-300 hover:text-mint-100 hover:bg-obsidian-800 transition-colors">
                 <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                     <line x1="18" y1="6" x2="6" y2="18"></line>
                     <line x1="6" y1="6" x2="18" y2="18"></line>
                 </svg>
             </button>
         </div>
-        <div class="max-h-[76vh] overflow-auto flex items-center justify-center rounded-xl bg-white p-3">
+        <div class="max-h-[74vh] overflow-auto flex items-center justify-center rounded-xl bg-white p-2">
             <img src="/static/confusion_matrix_v2.png" alt="Confusion Matrices ของโมเดลทั้ง 4 พืช (Rice, Corn, Potato, Tomato)" class="max-w-full h-auto rounded-lg">
         </div>
     </dialog>
@@ -622,20 +663,20 @@
         let cameraStream = null;
         let isSubmitting = false;
 
-        const CROP_HINTS = {
-            all: 'โหมดคัดแยกอัตโนมัติ (ครบ 23 คลาส)',
-            rice: 'เฉพาะทาง: ข้าว (Rice Specialist · 6 คลาส)',
-            corn: 'เฉพาะทาง: ข้าวโพด (Corn Specialist · 4 คลาส)',
-            potato: 'เฉพาะทาง: มันฝรั่ง (Potato Specialist · 3 คลาส)',
-            tomato: 'เฉพาะทาง: มะเขือเทศ (Tomato Specialist · 10 คลาส)'
+        const CROP_BADGES = {
+            all: 'Auto Active',
+            rice: 'Rice Mode',
+            corn: 'Corn Mode',
+            potato: 'Potato Mode',
+            tomato: 'Tomato Mode'
         };
 
         function syncCropFilter(val) {
             document.getElementById('upload-crop-filter').value = val;
             document.getElementById('camera-crop-filter').value = val;
-            const hint = document.getElementById('selected-crop-hint');
-            if (hint && CROP_HINTS[val]) {
-                hint.textContent = CROP_HINTS[val];
+            const badge = document.getElementById('selected-crop-badge');
+            if (badge && CROP_BADGES[val]) {
+                badge.textContent = CROP_BADGES[val];
             }
         }
 
@@ -645,7 +686,6 @@
                 r.checked = (r.value === cropVal);
             });
             syncCropFilter(cropVal);
-            document.getElementById('drop-zone').focus();
         }
 
         function showValidationError(message) {
@@ -672,16 +712,16 @@
                 cameraSec.classList.add('hidden');
                 tabUpload.setAttribute('aria-selected', 'true');
                 tabCamera.setAttribute('aria-selected', 'false');
-                tabUpload.className = "pb-3 px-0.5 border-b-2 border-emerald-400 text-emerald-400 text-sm font-semibold transition-colors flex items-center gap-2";
-                tabCamera.className = "pb-3 px-0.5 border-b-2 border-transparent text-mint-500 hover:text-mint-100 text-sm font-medium transition-colors flex items-center gap-2";
+                tabUpload.className = "pb-1.5 px-0.5 border-b-2 border-emerald-400 text-emerald-400 text-xs sm:text-sm font-semibold transition-colors flex items-center gap-1.5";
+                tabCamera.className = "pb-1.5 px-0.5 border-b-2 border-transparent text-mint-500 hover:text-mint-100 text-xs sm:text-sm font-medium transition-colors flex items-center gap-1.5";
                 stopCamera();
             } else {
                 uploadSec.classList.add('hidden');
                 cameraSec.classList.remove('hidden');
                 tabUpload.setAttribute('aria-selected', 'false');
                 tabCamera.setAttribute('aria-selected', 'true');
-                tabCamera.className = "pb-3 px-0.5 border-b-2 border-emerald-400 text-emerald-400 text-sm font-semibold transition-colors flex items-center gap-2";
-                tabUpload.className = "pb-3 px-0.5 border-b-2 border-transparent text-mint-500 hover:text-mint-100 text-sm font-medium transition-colors flex items-center gap-2";
+                tabCamera.className = "pb-1.5 px-0.5 border-b-2 border-emerald-400 text-emerald-400 text-xs sm:text-sm font-semibold transition-colors flex items-center gap-1.5";
+                tabUpload.className = "pb-1.5 px-0.5 border-b-2 border-transparent text-mint-500 hover:text-mint-100 text-xs sm:text-sm font-medium transition-colors flex items-center gap-1.5";
                 startCamera();
             }
         }
@@ -730,7 +770,7 @@
             document.getElementById('preview-box').classList.remove('hidden');
             document.getElementById('upload-status-hint').textContent = 'พร้อมสแกนใบพืช กดปุ่มสีเขียวเพื่อเริ่มวิเคราะห์รอยโรค';
             submitBtn.disabled = false;
-            submitBtn.className = "w-full sm:w-auto px-6 py-3 bg-emerald-500 hover:bg-emerald-400 text-emerald-950 font-bold rounded-xl text-sm cursor-pointer transition-all flex items-center justify-center gap-2 shrink-0";
+            submitBtn.className = "w-full sm:w-auto px-6 py-3 bg-emerald-500 hover:bg-emerald-400 text-emerald-950 font-bold rounded-xl text-sm cursor-pointer transition-all flex items-center justify-center gap-2 shrink-0 shadow-lg shadow-emerald-950/40";
         }
 
         function previewSelectedFile(event) {
@@ -792,7 +832,7 @@
             }
             if (!fileInput.files || !fileInput.files.length) {
                 event.preventDefault();
-                showValidationError('กรุณาเลือกไฟล์ภาพใบพืช หรือคลิกภาพตัวอย่างด้านล่างก่อนเริ่มการวินิจฉัย');
+                showValidationError('กรุณาเลือกไฟล์ภาพใบพืช หรือคลิกภาพตัวอย่างแปลงจริงก่อนเริ่มการวินิจฉัย');
                 return;
             }
             event.preventDefault();
@@ -809,7 +849,7 @@
 
             setTimeout(() => {
                 document.getElementById('upload-form').submit();
-            }, 650);
+            }, 600);
         }
 
         async function startCamera() {
