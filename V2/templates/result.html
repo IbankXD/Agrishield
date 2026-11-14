@@ -1,0 +1,459 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ผลการวินิจฉัย: {{ recommendation.thai_name }} — AgriShield AI V2</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Thai:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['"IBM Plex Sans Thai"', 'system-ui', 'sans-serif'],
+                        mono: ['"JetBrains Mono"', 'monospace'],
+                    },
+                    colors: {
+                        obsidian: {
+                            950: '#070E0A',
+                            900: '#0D1712',
+                            800: '#13221B',
+                            700: '#1A2E24',
+                            600: '#1E352A',
+                        },
+                        emerald: {
+                            300: '#6EE7B7',
+                            400: '#34D399',
+                            500: '#10B981',
+                            600: '#059669',
+                            950: '#04160E',
+                        },
+                        mint: {
+                            100: '#ECFDF5',
+                            300: '#B7D9C6',
+                            500: '#84AE98',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --bg-canvas: #070E0A;
+            --bg-panel: #0D1712;
+            --bg-subtle: #13221B;
+            --bg-hover: #1A2E24;
+            --border-hairline: #1E352A;
+            --ink-primary: #ECFDF5;
+            --ink-secondary: #B7D9C6;
+            --ink-muted: #84AE98;
+            --accent-emerald: #10B981;
+            --accent-emerald-bright: #34D399;
+            --accent-ink: #04160E;
+            --shadow-panel: 0 28px 60px -18px rgba(0, 0, 0, 0.72), 0 8px 20px -6px rgba(0, 0, 0, 0.45);
+        }
+
+        body {
+            font-family: 'IBM Plex Sans Thai', system-ui, sans-serif;
+            font-size: 16px;
+            line-height: 1.6;
+            background-color: var(--bg-canvas);
+            background-image: radial-gradient(ellipse 75% 40% at 50% 0%, rgba(16, 185, 129, 0.08), transparent 70%);
+            color: var(--ink-primary);
+            caret-color: var(--accent-emerald-bright);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        h1 {
+            font-size: clamp(1.875rem, 2.8vw, 2.25rem);
+            line-height: 1.25;
+            font-weight: 700;
+            letter-spacing: -0.025em;
+            text-wrap: balance;
+        }
+
+        h2 {
+            font-size: 1.375rem;
+            line-height: 1.35;
+            font-weight: 600;
+            letter-spacing: -0.015em;
+            text-wrap: balance;
+        }
+
+        h3 {
+            font-size: 1.0625rem;
+            line-height: 1.4;
+            font-weight: 600;
+        }
+
+        ::selection {
+            background-color: #10B981;
+            color: #04160E;
+        }
+
+        ::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #070E0A;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #1E352A;
+            border-radius: 9999px;
+            border: 2px solid #070E0A;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #2C4E3E;
+        }
+
+        a, button {
+            text-underline-offset: 4px;
+        }
+
+        :focus-visible {
+            outline: 2px solid var(--accent-emerald-bright);
+            outline-offset: 2px;
+        }
+
+        .tabular-nums {
+            font-variant-numeric: tabular-nums;
+        }
+
+        .panel-elevation {
+            background-color: var(--bg-panel);
+            border: 1px solid var(--border-hairline);
+            box-shadow: var(--shadow-panel);
+            padding: 1.75rem;
+        }
+        @media (min-width: 640px) {
+            .panel-elevation {
+                padding: 2.25rem;
+            }
+        }
+
+        .image-stage {
+            background-color: #060B08;
+            border: 1px solid var(--border-hairline);
+            border-radius: 0.875rem;
+            padding: 0.875rem;
+        }
+
+        .biocontrol-callout {
+            background-color: #0A1D15;
+            border: 1px solid #1E4635;
+            border-radius: 0.875rem;
+            padding: 1.25rem 1.5rem;
+        }
+
+        .print-callout {
+            border-radius: 0.75rem;
+            padding: 1rem 1.25rem;
+        }
+
+        /* Eco-Friendly Ink-Saving White Paper Print Stylesheet */
+        @media print {
+            .no-print { display: none !important; }
+            body {
+                background: #FFFFFF !important;
+                background-image: none !important;
+                color: #0F2318 !important;
+            }
+            .panel-elevation {
+                background: #FFFFFF !important;
+                box-shadow: none !important;
+                border-color: #CBD5CD !important;
+                color: #0F2318 !important;
+            }
+            .image-stage, .biocontrol-callout, .print-callout {
+                background: #F7FAF8 !important;
+                border-color: #CBD5CD !important;
+                color: #0F2318 !important;
+            }
+            h1, h2, h3, dt, dd, p, span, strong {
+                color: #0F2318 !important;
+            }
+            dl, .panel-elevation > div {
+                border-color: #D5E0D7 !important;
+            }
+        }
+    </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+    <!-- Deep Obsidian & Emerald Navbar -->
+    <header class="bg-[#070E0A]/90 backdrop-blur-md border-b border-obsidian-600 sticky top-0 z-40 no-print">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
+            <a href="/" class="flex items-center gap-3 group rounded-lg py-1">
+                <span class="w-9 h-9 rounded-xl bg-emerald-500 flex items-center justify-center text-emerald-950 group-hover:bg-emerald-400 transition-colors">
+                    <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"></path>
+                        <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"></path>
+                    </svg>
+                </span>
+                <div class="flex items-center gap-2.5">
+                    <span class="text-base sm:text-lg font-bold tracking-tight text-mint-100">AgriShield AI</span>
+                    <span class="text-[11px] font-mono font-semibold bg-obsidian-800 text-emerald-400 border border-obsidian-600 px-2 py-0.5 rounded-md">V2 · Report</span>
+                </div>
+            </a>
+
+            <div class="flex items-center gap-2">
+                <a href="http://127.0.0.1:8000" target="_blank" class="hidden sm:inline-flex items-center gap-1.5 text-xs font-medium text-mint-300 hover:text-mint-100 bg-obsidian-900 hover:bg-obsidian-800 border border-obsidian-600 px-3 py-1.5 rounded-lg transition-colors">
+                    <svg class="w-3.5 h-3.5 text-mint-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                        <polyline points="15 3 21 3 21 9"></polyline>
+                        <line x1="10" y1="14" x2="21" y2="3"></line>
+                    </svg>
+                    <span>เทียบกับ V1 (8000)</span>
+                </a>
+                <a href="/" class="inline-flex items-center gap-1.5 text-xs font-medium text-mint-300 hover:text-mint-100 bg-obsidian-900 hover:bg-obsidian-800 border border-obsidian-600 px-3 py-1.5 rounded-lg transition-colors">
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <line x1="19" y1="12" x2="5" y2="12"></line>
+                        <polyline points="12 19 5 12 12 5"></polyline>
+                    </svg>
+                    <span>สแกนภาพอื่น</span>
+                </a>
+                <button type="button" onclick="window.print()" class="inline-flex items-center gap-1.5 text-xs bg-emerald-500 hover:bg-emerald-400 text-emerald-950 font-bold px-3.5 py-1.5 rounded-lg transition-colors">
+                    <svg class="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <polyline points="6 9 6 2 18 2 18 9"></polyline>
+                        <path d="M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2"></path>
+                        <rect width="12" height="8" x="6" y="14"></rect>
+                    </svg>
+                    <span>พิมพ์รายงาน</span>
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Diagnostic Sheet -->
+    <main class="flex-grow max-w-5xl mx-auto px-4 sm:px-6 py-8 sm:py-10 w-full">
+
+        <!-- Unified Dark Obsidian Diagnostic Surface -->
+        <article class="panel-elevation rounded-2xl divide-y divide-obsidian-600">
+
+            <!-- Section 1: Diagnosis Title & Confidence Meter -->
+            <div class="pb-7">
+                <div class="flex flex-col md:flex-row md:items-start justify-between gap-6">
+                    <div class="space-y-3">
+                        <h1 class="text-mint-100">
+                            {{ recommendation.thai_name }}
+                        </h1>
+                        <div class="flex flex-wrap items-center gap-2 text-xs">
+                            <span class="px-3 py-1 rounded-full font-semibold border" style="{{ status_badge_style }}">
+                                {{ status_label }}
+                            </span>
+                            <span class="px-3 py-1 rounded-full bg-obsidian-800 text-mint-300 border border-obsidian-600 font-medium">
+                                ชนิดพืช: {{ recommendation.crop }}
+                            </span>
+                            <span class="px-3 py-1 rounded-full bg-obsidian-800 text-mint-300 border border-obsidian-600 font-mono">
+                                {{ top1_class }}
+                            </span>
+                            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-[#092217] text-emerald-300 border border-[#194B35] font-medium">
+                                <svg class="w-3.5 h-3.5 text-emerald-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                    <path d="M3 7V5a2 2 0 0 1 2-2h2"></path>
+                                    <path d="M17 3h2a2 2 0 0 1 2 2v2"></path>
+                                    <path d="M21 17v2a2 2 0 0 1-2 2h-2"></path>
+                                    <path d="M7 21H5a2 2 0 0 1-2-2v-2"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                                <span>{{ engine_label }}</span>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="md:text-right shrink-0 pt-3 md:pt-0">
+                        <div class="flex md:flex-col items-baseline md:items-end justify-between gap-2">
+                            <span class="text-xs font-medium text-mint-500">ระดับความมั่นใจของโมเดล</span>
+                            <span class="text-2xl sm:text-3xl font-bold text-emerald-400 font-mono tabular-nums">{{ confidence }}%</span>
+                        </div>
+                        <div class="w-full md:w-44 bg-obsidian-800 border border-obsidian-600 rounded-full h-2.5 overflow-hidden mt-2">
+                            <div class="bg-emerald-500 h-full rounded-full transition-all" style="width: {{ confidence }}%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Top-2 Differential Diagnosis Alert (Replaced by server.py) -->
+                {% if top2_info %}
+                <div role="alert" class="print-callout mt-5 p-4 rounded-xl bg-[#241807] border border-[#784B12] text-[#FEF3C7] flex items-start gap-3.5 text-sm">
+                    <svg class="w-5 h-5 text-[#FBBF24] shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
+                        <line x1="12" y1="9" x2="12" y2="13"></line>
+                        <line x1="12" y1="17" x2="12.01" y2="17"></line>
+                    </svg>
+                    <div>
+                        <strong class="font-semibold text-[#FFFBEB]">ข้อควรระวังในการวินิจฉัยแยกโรค (Differential Diagnosis Advisory)</strong>
+                        <p class="text-xs text-[#FDE68A] mt-1 leading-relaxed">
+                            ความมั่นใจของโมเดลต่ำกว่าเกณฑ์มาตรฐาน 85% แนะนำให้เปรียบเทียบลักษณะอาการร่วมกับตารางด้านล่าง
+                        </p>
+                    </div>
+                </div>
+                {% endif %}
+            </div>
+
+            <!-- Section 2: Side-by-Side Dark Inspection Stage (Original vs Grad-CAM) -->
+            <div class="py-7">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-5">
+                    <h2 class="text-mint-100 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-emerald-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                        </svg>
+                        <span>การวิเคราะห์พื้นที่ความสนใจด้วย Explainable AI (Grad-CAM)</span>
+                    </h2>
+                    <span class="text-xs text-mint-500 font-mono">Layer: MobileNetV3 features[-1]</span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Original Image Figure -->
+                    <figure class="flex flex-col">
+                        <div class="image-stage aspect-[4/3] flex items-center justify-center">
+                            <img src="/static/uploads/{{ orig_image }}" alt="ภาพใบพืชต้นฉบับที่ส่งตรวจ" class="max-w-full max-h-full object-contain rounded-lg">
+                        </div>
+                        <figcaption class="mt-2.5 text-center text-xs text-mint-300 font-medium">
+                            ภาพใบพืชต้นฉบับ (Original Leaf Input)
+                        </figcaption>
+                    </figure>
+
+                    <!-- Grad-CAM Heatmap Figure -->
+                    <figure class="flex flex-col">
+                        <div class="image-stage aspect-[4/3] flex items-center justify-center relative">
+                            <img src="/static/uploads/{{ heatmap_image }}" alt="ภาพวิเคราะห์ตำแหน่งรอยโรคด้วย Grad-CAM Heatmap" class="max-w-full max-h-full object-contain rounded-lg">
+                            <span class="no-print absolute bottom-3 right-3 bg-[#070E0A]/90 text-emerald-300 border border-obsidian-600 text-[11px] px-2.5 py-1 rounded-md font-mono">
+                                Grad-CAM Overlay
+                            </span>
+                        </div>
+                        <figcaption class="mt-2.5 text-center text-xs text-emerald-300 font-semibold">
+                            {{ gradcam_caption }}
+                        </figcaption>
+                    </figure>
+                </div>
+            </div>
+
+            <!-- Section 3: Pathology & Biocontrol Treatment Specification -->
+            <div class="pt-7">
+                <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 mb-5">
+                    <h2 class="text-mint-100 flex items-center gap-2">
+                        <svg class="w-5 h-5 text-emerald-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M11 20A7 7 0 0 1 9.8 6.1C15.5 5 17 4.48 19 2c1 2 2 4.18 2 8 0 5.5-4.78 10-10 10Z"></path>
+                            <path d="M2 21c0-3 1.85-5.36 5.08-6C9.5 14.52 12 13 13 12"></path>
+                        </svg>
+                        <span>ข้อมูลพยาธิวิทยาพืชและแนวทางใช้สารชีวภัณฑ์ปลอดภัย</span>
+                    </h2>
+                    <span class="inline-flex items-center gap-1.5 text-xs font-semibold text-emerald-300 bg-[#092217] border border-[#194B35] px-3 py-1 rounded-full w-fit">
+                        เป้าหมายการพัฒนาที่ยั่งยืน SDG 12
+                    </span>
+                </div>
+
+                <!-- Highlighted Biocontrol Prescription Banner -->
+                <div class="biocontrol-callout mb-6 flex items-start gap-3.5">
+                    <span class="no-print w-9 h-9 rounded-lg bg-emerald-500 text-emerald-950 flex items-center justify-center shrink-0 mt-0.5">
+                        <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                            <path d="M10 2v7.527a2 2 0 0 1-.211.896L4.72 20.55a1 1 0 0 0 .9 1.45h12.76a1 1 0 0 0 .9-1.45l-5.069-10.127A2 2 0 0 1 14 9.527V2"></path>
+                            <path d="M8.5 2h7"></path>
+                            <path d="M7 16h10"></path>
+                        </svg>
+                    </span>
+                    <div class="space-y-1">
+                        <h3 class="text-emerald-300">
+                            สูตรการใช้สารชีวภัณฑ์ควบคุมโรค (Recommended Biocontrol Formulation)
+                        </h3>
+                        <p class="text-sm sm:text-base text-mint-100 leading-relaxed font-medium tabular-nums">
+                            {{ recommendation.biocontrol_treatment }}
+                        </p>
+                    </div>
+                </div>
+
+                <!-- Structured Agronomic Specification Table -->
+                <dl class="divide-y divide-obsidian-600 border-t border-b border-obsidian-600 text-sm">
+                    <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-6">
+                        <dt class="font-semibold text-mint-300 flex items-center gap-2 mb-1 sm:mb-0">
+                            <svg class="w-4 h-4 text-emerald-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <line x1="12" y1="16" x2="12" y2="12"></line>
+                                <line x1="12" y1="8" x2="12.01" y2="8"></line>
+                            </svg>
+                            <span>สาเหตุการเกิดโรค (Etiology)</span>
+                        </dt>
+                        <dd class="sm:col-span-2 text-mint-100 font-medium leading-relaxed">
+                            {{ recommendation.cause }}
+                        </dd>
+                    </div>
+
+                    <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-6">
+                        <dt class="font-semibold text-mint-300 flex items-center gap-2 mb-1 sm:mb-0">
+                            <svg class="w-4 h-4 text-emerald-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+                                <circle cx="12" cy="12" r="3"></circle>
+                            </svg>
+                            <span>ลักษณะอาการเด่น (Symptoms)</span>
+                        </dt>
+                        <dd class="sm:col-span-2 text-mint-100 leading-relaxed">
+                            {{ recommendation.symptoms }}
+                        </dd>
+                    </div>
+
+                    <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-6">
+                        <dt class="font-semibold text-mint-300 flex items-center gap-2 mb-1 sm:mb-0">
+                            <svg class="w-4 h-4 text-emerald-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                            </svg>
+                            <span>การจัดการแปลงแบบธรรมชาติ (Cultural Control)</span>
+                        </dt>
+                        <dd class="sm:col-span-2 text-mint-100 leading-relaxed">
+                            {{ recommendation.natural_management }}
+                        </dd>
+                    </div>
+
+                    <div class="py-4 sm:grid sm:grid-cols-3 sm:gap-6">
+                        <dt class="font-semibold text-mint-300 flex items-center gap-2 mb-1 sm:mb-0">
+                            <svg class="w-4 h-4 text-emerald-400 shrink-0" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                                <circle cx="12" cy="12" r="10"></circle>
+                                <path d="M12 2a14.5 14.5 0 0 0 0 20 14.5 14.5 0 0 0 0-20"></path>
+                                <path d="M2 12h20"></path>
+                            </svg>
+                            <span>ผลลัพธ์ต่อสิ่งแวดล้อม (SDG 12 Impact)</span>
+                        </dt>
+                        <dd class="sm:col-span-2 text-emerald-300 font-medium leading-relaxed">
+                            {{ recommendation.sdg_impact }}
+                        </dd>
+                    </div>
+                </dl>
+
+                <!-- Agronomic Disclaimer -->
+                <p class="mt-5 text-xs text-mint-500 leading-relaxed">
+                    หมายเหตุทางวิชาการ: ผลการวิเคราะห์นี้ประมวลผลจากลักษณะทางสายตาด้วยโมเดลปัญญาประดิษฐ์เพื่อสนับสนุนการตัดสินใจเบื้องต้นของเกษตรกร หากพบการระบาดรุนแรงหรือลุกลามเป็นวงกว้าง แนะนำให้ปรึกษากลุ่มอารักขาพืช สำนักงานเกษตรอำเภอในพื้นที่
+                </p>
+            </div>
+
+        </article>
+
+        <!-- Primary Action Bar -->
+        <div class="mt-8 flex flex-wrap justify-center gap-4 no-print">
+            <a href="/" class="px-7 py-3 bg-emerald-500 hover:bg-emerald-400 text-emerald-950 font-bold rounded-xl text-sm transition-colors inline-flex items-center gap-2.5">
+                <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                    <path d="M3 7V5a2 2 0 0 1 2-2h2"></path>
+                    <path d="M17 3h2a2 2 0 0 1 2 2v2"></path>
+                    <path d="M21 17v2a2 2 0 0 1-2 2h-2"></path>
+                    <path d="M7 21H5a2 2 0 0 1-2-2v-2"></path>
+                    <circle cx="12" cy="12" r="3"></circle>
+                </svg>
+                <span>สแกนภาพใบพืชใหม่</span>
+            </a>
+        </div>
+
+    </main>
+
+    <!-- Minimal Dark Obsidian Footer -->
+    <footer class="border-t border-obsidian-600 bg-[#050A07] py-4 px-4 text-xs text-mint-500 mt-10 no-print">
+        <div class="max-w-5xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+            <p class="font-medium text-mint-300">AgriShield AI V2 — ระบบวินิจฉัยโรคพืชและคำแนะนำชีวภัณฑ์ (SDG 12)</p>
+            <p>กลุ่มที่ 32: โครงงานบูรณาการ 4 รายวิชา (CSI410, CSI411, CSI413, CSI414)</p>
+        </div>
+    </footer>
+
+</body>
+</html>

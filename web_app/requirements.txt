@@ -1,0 +1,9 @@
+# AgriShield AI — Python Dependencies
+torch
+torchvision
+pillow
+numpy
+fastapi
+uvicorn
+jinja2
+python-multipart

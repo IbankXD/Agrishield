@@ -1,0 +1,44 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.pyd
+
+# PyTorch checkpoints and large model binaries (>15MB)
+*.pth
+*.zip
+
+# Virtual Environments
+venv/
+env/
+.venv/
+ENV/
+
+# Temporary uploads and cache
+*/static/uploads/*
+!*/static/uploads/.gitkeep
+*/static/samples/gradcam_*
+scratch/
+
+# IDE & OS files
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Agent & Local tools
+.agent/
+.impeccable/
+
+# Large binaries and offline OneDrive files (Presentations, PDFs, Templates, Exports)
+*.pdf
+*.pptx
+*.pbix
+pptx_template/
+week13_pptx_build/
+เทสแล้วพลาดไม่ควรเป็น/
+CSI413/
+dataset-tomato-potato-corn-rice-export.csv
+plant_summary_filtered*.csv
+แนะนำP1.txt

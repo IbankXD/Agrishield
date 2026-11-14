@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="UTF-8">
+<title>AgriShield AI — สรุปเนื้อหานำเสนอ Week 13 (Model Gate)</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Sarabun:wght@300;400;600;700&display=swap');
+  
+  @page {
+    size: A4;
+    margin: 15mm 15mm 15mm 15mm;
+  }
+  
+  body {
+    font-family: 'Sarabun', 'Segoe UI', Tahoma, sans-serif;
+    line-height: 1.5;
+    color: #2c3e50;
+    margin: 0;
+    padding: 10px;
+    background: #fff;
+    font-size: 13px;
+  }
+
+  .header {
+    border-bottom: 2px solid #27ae60;
+    padding-bottom: 8px;
+    margin-bottom: 15px;
+  }
+
+  .title {
+    font-size: 20px;
+    font-weight: 700;
+    color: #1e824c;
+    margin: 0;
+  }
+
+  .subtitle {
+    font-size: 13px;
+    color: #7f8c8d;
+    margin-top: 3px;
+  }
+
+  .badge {
+    display: inline-block;
+    background: #e8f8f5;
+    color: #16a085;
+    padding: 3px 8px;
+    border-radius: 4px;
+    font-weight: 600;
+    font-size: 11px;
+    margin-top: 5px;
+  }
+
+  h2 {
+    font-size: 14px;
+    color: #2c3e50;
+    border-left: 4px solid #27ae60;
+    padding-left: 8px;
+    margin-top: 15px;
+    margin-bottom: 8px;
+    font-weight: 700;
+  }
+
+  p, ul {
+    margin: 4px 0;
+  }
+
+  ul {
+    padding-left: 20px;
+  }
+
+  li {
+    margin-bottom: 4px;
+  }
+
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 10px 0;
+    font-size: 11.5px;
+  }
+
+  th, td {
+    border: 1px solid #bdc3c7;
+    padding: 6px 8px;
+    text-align: left;
+  }
+
+  th {
+    background-color: #f4f6f7;
+    color: #34495e;
+    font-weight: 600;
+    text-align: center;
+  }
+
+  td.center {
+    text-align: center;
+  }
+
+  tr.highlight {
+    background-color: #eafaf1;
+    font-weight: 600;
+  }
+
+  .winner {
+    color: #27ae60;
+    font-weight: 700;
+  }
+
+  .box {
+    background: #f8f9f9;
+    border: 1px solid #ebedef;
+    border-radius: 5px;
+    padding: 8px 12px;
+    margin: 8px 0;
+  }
+
+  .footer {
+    margin-top: 25px;
+    border-top: 1px solid #e5e7e9;
+    padding-top: 8px;
+    font-size: 11px;
+    color: #95a5a6;
+    text-align: right;
+  }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1 class="title">AgriShield AI — สรุปเนื้อหานำเสนอ Week 13 (Model Gate)</h1>
+  <div class="subtitle">ระบบวินิจฉัยโรคพืชและสนับสนุนการตัดสินใจเพื่อลดการใช้สารเคมี (บูรณาการ CSI410, CSI411, CSI413, CSI414)</div>
+  <div class="badge">กลุ่มที่ 32 | สมาชิก: นายศิวัฒน์ แก้วหนองสังข์ & นายธนวัฒน์ ณรงค์วงค์วัฒนา</div>
+</div>
+
+<h2>1. การทบทวนขอบเขตและการปรับปรุงข้อมูล (Data Scope & Recap)</h2>
+<ul>
+  <li><b>ชุดข้อมูลรวมสมบูรณ์:</b> พืชเศรษฐกิจ <b>4 ชนิด</b> ได้แก่ มะเขือเทศ (Tomato), ข้าวโพด (Corn), มันฝรั่ง (Potato), และข้าว (Rice) รวม <b>23 คลาส (29,493 ภาพ)</b></li>
+  <li><b>การแก้ไขตามคำแนะนำของอาจารย์จากรอบ Data Gate:</b>
+    <ul>
+      <li>ดึงภาพถ่ายแปลงจริงของมันฝรั่งจากภายนอก (<code>muhammadardiputra</code>) มาเสริม เพื่อแก้ปัญหาข้อมูลสำเร็จรูปเกินไป</li>
+      <li>แบ่งสัดส่วนข้อมูลใหม่เป็น <b>70% Train (20,636 ภาพ) : 30% Test (8,857 ภาพ)</b> แบบ Stratified Split</li>
+      <li>ปรับ Data Augmentation เป็น <b>Geometric Only</b> (ตัดการเปลี่ยนสีและภาพขาวดำออก เพื่อรักษารงควัตถุของรอยโรคพืช)</li>
+    </ul>
+  </li>
+</ul>
+
+<h2>2. โมเดลที่นำมาเปรียบเทียบ (Baseline vs Candidate Models)</h2>
+<p>จำแนกการศึกษาเปรียบเทียบออกเป็น 3 สถาปัตยกรรม:</p>
+<ul>
+  <li><b>Baseline Model:</b> Simple Custom CNN (3 Convolutional Layers) สร้างและเทรนจากศูนย์ (Train from scratch) เพื่อใช้เป็นเกณฑ์มาตรฐานขั้นต่ำ</li>
+  <li><b>Candidate 1 (โมเดลตัวเลือกหลัก):</b> <b>MobileNetV3 Large</b> (Pre-trained on ImageNet) สถาปัตยกรรม Depthwise Separable Convolution เน้นขนาดเล็กและประมวลผลเร็ว</li>
+  <li><b>Candidate 2 (โมเดลเปรียบเทียบ):</b> <b>ResNet50</b> สถาปัตยกรรมลึก 50 ชั้นพร้อม Residual Connection สำหรับเปรียบเทียบเชิงสถาปัตยกรรมขนาดใหญ่</li>
+</ul>
+
+<h2>3. ตัวชี้วัดและการแก้ปัญหา Class Imbalance (Evaluation Strategy)</h2>
+<ul>
+  <li><b>การแก้ปัญหาในขั้นตอนการเทรน:</b> ใช้เทคนิค <b>Cost-Sensitive Learning ผ่าน Balanced Class Weights</b> คำนวณค่าน้ำหนักผกผันกับจำนวนภาพจริง ส่งให้ <code>CrossEntropyLoss</code> บังคับให้โมเดลลงโทษคลาสที่มีภาพน้อย (เช่น มันฝรั่ง) หนักขึ้น</li>
+  <li><b>ตัวชี้วัดหลัก:</b> ชู <b>Macro F1-Score (และ Recall)</b> เป็นเกณฑ์ตัดสินหลักแทน Accuracy เพื่อให้ทุกคลาสโรคได้รับความสำคัญเท่าเทียมกัน</li>
+</ul>
+
+<h2>4. ผลการทดลองเปรียบเทียบ (Benchmark Results)</h2>
+<p>ผลการประเมินบนชุดทดสอบจริง Unseen Test Set (30% — 8,857 ภาพ):</p>
+
+<table>
+  <thead>
+    <tr>
+      <th>โมเดล (Model)</th>
+      <th>แนวทาง (Approach)</th>
+      <th>Test Accuracy</th>
+      <th>Macro F1-Score</th>
+      <th>ขนาดไฟล์</th>
+      <th>Inference Time</th>
+      <th>ผลการตัดสิน</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><b>Simple Custom CNN</b></td>
+      <td>Train from Scratch (3 Layers)</td>
+      <td class="center">85.20%</td>
+      <td class="center">0.7930</td>
+      <td class="center">~13.2 MB</td>
+      <td class="center">~12 ms</td>
+      <td class="center">❌ ประสิทธิภาพไม่เพียงพอ</td>
+    </tr>
+    <tr>
+      <td><b>ResNet50</b></td>
+      <td>Transfer Learning (50 Layers)</td>
+      <td class="center">99.10%</td>
+      <td class="center">0.9895</td>
+      <td class="center">~98.0 MB</td>
+      <td class="center">~48 ms</td>
+      <td class="center">⚠️ ไฟล์ใหญ่เกินไปสำหรับ Edge</td>
+    </tr>
+    <tr class="highlight">
+      <td><b>MobileNetV3 Large ⭐</b></td>
+      <td>Transfer Learning + Class Weights</td>
+      <td class="center"><b>99.49%</b></td>
+      <td class="center"><b>0.9919</b></td>
+      <td class="center"><b>~16.4 MB</b></td>
+      <td class="center"><b>~18 ms</b></td>
+      <td class="center winner">⭐ SELECTED (ชนะเลิศ)</td>
+    </tr>
+  </tbody>
+</table>
+
+<div class="box">
+  <b>พลวัตการเรียนรู้ (Training Dynamics):</b> โมเดล MobileNetV3 ลู่เข้าสู่อิ่มตัวอย่างมั่นคงตั้งแต่ Epoch ที่ 7 โดยได้ Test Accuracy 99.49% และ Test Loss ต่ำเพียง 0.0228 โดยไม่มีปัญหา Overfitting
+</div>
+
+<h2>5. การวิเคราะห์ข้อผิดพลาด (Error Analysis จาก Confusion Matrix)</h2>
+<ul>
+  <li><b>กลุ่มโรคข้าวและข้าวโพด:</b> ทำนายถูกต้องสมบูรณ์แบบ <b>100%</b> ทุกภาพ</li>
+  <li><b>จุดที่โมเดลเกิดความสับสนเล็กน้อย (&lt; 0.5%):</b>
+    <ul>
+      <li><code>Tomato Early Blight</code> สับสนกับ <code>Tomato Bacterial Spot</code> (3 ภาพ) เนื่องจากในระยะเริ่มต้นมีแผลเป็นจุดสีน้ำตาลขอบเปื่อยคล้ายคลึงกัน</li>
+      <li><code>Potato Early Blight</code> สับสนกับ <code>Potato Late Blight</code> (2 ภาพ) ในระยะที่ใบเริ่มไหม้เกรียมเป็นบริเวณกว้าง</li>
+    </ul>
+  </li>
+  <li><b>แนวทางแก้ไขในการใช้งานจริง:</b> หากโมเดลมีค่าความมั่นใจ (Confidence Score) ต่ำกว่า 85% ระบบจะแสดงผลคำทำนายแบบ <b>Top-2</b> ให้เกษตรกรตรวจสอบลักษณะวงแหวนของแผลเพิ่มเติม</li>
+</ul>
+
+<h2>6. เหตุผลทางวิศวกรรมในการเลือกโมเดล (Model Selection Rationale)</h2>
+<p>กลุ่ม 32 ตัดสินใจเลือก <b>MobileNetV3 Large</b> เป็นโมเดลหลักของโครงงาน ด้วยเหตุผล 3 ประการ:</p>
+<ol>
+  <li><b>ความแม่นยำสูงสุด (High Performance):</b> ได้รับค่า <b>Macro F1-Score สูงสุดถึง 0.9919 (99.19%)</b> เหนือกว่า Baseline CNN ชัดเจน</li>
+  <li><b>ขนาดไฟล์กะทัดรัด (Ultra-Lightweight):</b> ขนาดไฟล์เพียง <b>16.4 MB</b> (เล็กกว่า ResNet50 ถึง 6 เท่า) สะดวกต่อการโหลดขึ้น Cloud และรันบน Web Browser</li>
+  <li><b>ความเร็วในการประมวลผล (Low Latency):</b> ใช้เวลาประมวลผลเพียง <b>18 มิลลิวินาทีต่อภาพ</b> เหมาะอย่างยิ่งกับการนำไปทำเป็น <b>Mobile Web Application</b> ให้เกษตรกรถ่ายภาพและรู้ผลทันทีในแปลงจริง</li>
+</ol>
+
+<h2>7. แผนงานระยะถัดไป (Next Steps)</h2>
+<ul>
+  <li><b>การพัฒนาแอปพลิเคชัน:</b> นำโมเดล MobileNetV3 ไปเชื่อมต่อเข้ากับระบบ Web Application (FastAPI/React)</li>
+  <li><b>ระบบสนับสนุนการตัดสินใจ:</b> เชื่อมต่อผลวินิจฉัยเข้ากับ <b>ฐานข้อมูลคำแนะนำชีวภัณฑ์ (Biocontrol Recommendation DB)</b> เพื่อแนะนำแนวทางการรักษาตามธรรมชาติแทนการซื้อสารเคมี (สอดคล้องกับเป้าหมาย SDG 12)</li>
+</ul>
+
+<div class="footer">
+  เอกสารสรุปประกอบการนำเสนอ Milestone: Model Gate (Week 13) | วิชาวิทยาการข้อมูลและปัญญาประดิษฐ์บูรณาการ
+</div>
+
+</body>
+</html>
