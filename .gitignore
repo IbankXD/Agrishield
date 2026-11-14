@@ -14,6 +14,17 @@ env/
 .venv/
 ENV/
 
+# Legacy V1 & Experimental Files (Keep repo V2 only)
+web_app/
+test/
+*.ipynb
+AgriShield_*.py
+agrishield_pipeline_*.py
+run_webapp.bat
+run_compare_*.bat
+week13_summary.html
+agrishield_4_models_confusion_matrices_70_15_15.png
+
 # Temporary uploads and cache
 */static/uploads/*
 !*/static/uploads/.gitkeep
