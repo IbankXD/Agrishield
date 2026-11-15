@@ -4,6 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>AgriShield AI V2 — ระบบวินิจฉัยโรคพืชเฉพาะทางและที่ปรึกษาชีวภัณฑ์</title>
+    <script>
+        // Apply saved theme immediately before render to avoid flash
+        (function() {
+            try {
+                var saved = localStorage.getItem('agrishield_theme');
+                if (saved === 'light') {
+                    document.documentElement.setAttribute('data-theme', 'light');
+                }
+            } catch (e) {}
+        })();
+    </script>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -68,6 +79,7 @@
             color: var(--ink-primary);
             caret-color: var(--accent-emerald-bright);
             -webkit-font-smoothing: antialiased;
+            transition: background-color 0.25s ease, color 0.25s ease;
         }
 
         h1 {
@@ -120,6 +132,7 @@
             border: 1px solid var(--border-hairline);
             border-radius: 1rem;
             box-shadow: var(--shadow-stage);
+            transition: background-color 0.25s ease, border-color 0.25s ease, box-shadow 0.25s ease;
         }
 
         /* Crop Specialist Option Card */
@@ -230,12 +243,116 @@
             background: rgba(3, 8, 5, 0.82);
             backdrop-filter: blur(6px);
         }
+
+        /* ==========================================================================
+           ☀️ ธีมเขียว-ขาว (Emerald White Light Theme Styles)
+           ========================================================================== */
+        html[data-theme="light"],
+        html[data-theme="light"] body {
+            --bg-canvas: #F4F9F6;
+            --bg-panel: #FFFFFF;
+            --bg-subtle: #EDF6F1;
+            --bg-hover: #DFEEE5;
+            --border-hairline: #CFE4D7;
+            --border-glow: #10B981;
+            --ink-primary: #0A2318;
+            --ink-secondary: #1F4D37;
+            --ink-muted: #4B7863;
+            --accent-emerald: #059669;
+            --accent-emerald-bright: #10B981;
+            --accent-ink: #FFFFFF;
+            --shadow-stage: 0 16px 36px -12px rgba(5, 150, 105, 0.12), 0 4px 14px -2px rgba(0, 0, 0, 0.05);
+            background-color: #F4F9F6 !important;
+            background-image: radial-gradient(ellipse 80% 40% at 50% 0%, rgba(16, 185, 129, 0.10), transparent 70%) !important;
+            color: #0A2318 !important;
+        }
+
+        html[data-theme="light"] header {
+            background-color: rgba(255, 255, 255, 0.95) !important;
+            border-color: #D3E7DC !important;
+        }
+        html[data-theme="light"] header a span.text-mint-100 {
+            color: #0A2318 !important;
+        }
+        html[data-theme="light"] .text-mint-100 {
+            color: #0A2318 !important;
+        }
+        html[data-theme="light"] .text-mint-200 {
+            color: #173E2C !important;
+        }
+        html[data-theme="light"] .text-mint-300 {
+            color: #245A40 !important;
+        }
+        html[data-theme="light"] .text-mint-500 {
+            color: #527E67 !important;
+        }
+        html[data-theme="light"] .studio-card {
+            background-color: #FFFFFF !important;
+            border-color: #D3E7DC !important;
+            box-shadow: 0 16px 36px -10px rgba(16, 185, 129, 0.08), 0 4px 14px -2px rgba(0, 0, 0, 0.03) !important;
+        }
+        html[data-theme="light"] .crop-select-card {
+            background-color: #F3F9F5 !important;
+            border-color: #D3E7DC !important;
+            color: #1F4D37 !important;
+        }
+        html[data-theme="light"] .crop-select-card:hover {
+            background-color: #E6F3EC !important;
+            border-color: #059669 !important;
+        }
+        html[data-theme="light"] input:checked + .crop-select-card {
+            background-color: #E6F7EF !important;
+            border-color: #059669 !important;
+            color: #0A2318 !important;
+        }
+        html[data-theme="light"] .scanner-dropzone {
+            background-color: #F8FCFA !important;
+            border-color: #A0D1B6 !important;
+        }
+        html[data-theme="light"] .scanner-dropzone:hover,
+        html[data-theme="light"] .scanner-dropzone.drop-active {
+            background-color: #F0FAF4 !important;
+            border-color: #059669 !important;
+        }
+        html[data-theme="light"] .scanner-dropzone::before,
+        html[data-theme="light"] .scanner-dropzone::after {
+            border-color: #34D399 !important;
+        }
+        html[data-theme="light"] .bg-obsidian-800 {
+            background-color: #EAF4EE !important;
+        }
+        html[data-theme="light"] .bg-obsidian-900 {
+            background-color: #F3F9F5 !important;
+        }
+        html[data-theme="light"] .border-obsidian-600 {
+            border-color: #D3E7DC !important;
+        }
+        html[data-theme="light"] footer {
+            background-color: #EAF4EE !important;
+            border-color: #D3E7DC !important;
+        }
+        html[data-theme="light"] #section-camera > div:first-child {
+            background-color: #EAF4EE !important;
+            border-color: #D3E7DC !important;
+        }
+        html[data-theme="light"] #camera-loading {
+            background-color: rgba(244, 249, 246, 0.95) !important;
+            color: #0A2318 !important;
+        }
+        html[data-theme="light"] #validation-error {
+            background-color: #FEE2E2 !important;
+            color: #991B1B !important;
+            border-color: #FCA5A5 !important;
+        }
+        html[data-theme="light"] #validation-error-text {
+            color: #7F1D1D !important;
+        }
     </style>
 </head>
 <body class="min-h-screen flex flex-col justify-between">
 
-    <!-- Deep Obsidian & Emerald Navbar -->
-    <header class="bg-[#070E0A]/90 backdrop-blur-md border-b border-obsidian-600 sticky top-0 z-40">
+    <!-- Deep Obsidian & Emerald Navbar (With Theme Switcher) -->
+    <header class="bg-[#070E0A]/90 backdrop-blur-md border-b border-obsidian-600 sticky top-0 z-40 transition-colors">
         <div class="max-w-6xl mx-auto px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
             <a href="/" class="flex items-center gap-3 group rounded-lg py-1">
                 <span class="w-9 h-9 rounded-xl bg-emerald-500 flex items-center justify-center text-emerald-950 group-hover:bg-emerald-400 transition-colors shadow-sm">
@@ -250,17 +367,16 @@
                 </div>
             </a>
 
+            <!-- Right Navbar: Theme Switcher & V1 Link -->
             <div class="flex items-center gap-2.5">
-                <button type="button" onclick="openMatrixModal()" class="inline-flex items-center gap-1.5 text-xs font-medium text-mint-300 hover:text-mint-100 bg-obsidian-900 hover:bg-obsidian-800 border border-obsidian-600 px-3 py-1.5 rounded-lg transition-colors">
-                    <svg class="w-3.5 h-3.5 text-emerald-400" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                        <rect width="18" height="18" x="3" y="3" rx="2"></rect>
-                        <path d="M3 9h18"></path>
-                        <path d="M3 15h18"></path>
-                        <path d="M9 3v18"></path>
-                        <path d="M15 3v18"></path>
-                    </svg>
-                    <span>Confusion Matrix</span>
+                <!-- Theme Switcher Button (Replaces Confusion Matrix) -->
+                <button type="button" id="theme-toggle-btn" onclick="toggleTheme()" 
+                        class="inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg border transition-all cursor-pointer bg-obsidian-900 hover:bg-obsidian-800 text-mint-200 border-obsidian-600 shadow-sm"
+                        title="สลับธีม เขียว-ขาว / เขียว-ดำ">
+                    <span id="theme-toggle-icon" class="text-sm">☀️</span>
+                    <span id="theme-toggle-text">ธีมเขียว-ขาว</span>
                 </button>
+
                 <a href="http://127.0.0.1:8000" target="_blank" class="hidden sm:inline-flex items-center gap-1.5 text-xs font-medium text-mint-300 hover:text-mint-100 bg-obsidian-900 hover:bg-obsidian-800 border border-obsidian-600 px-3 py-1.5 rounded-lg transition-colors">
                     <svg class="w-3.5 h-3.5 text-mint-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                         <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
@@ -592,6 +708,11 @@
                             <video id="camera-stream" autoplay playsinline class="w-full h-full object-cover"></video>
                             <canvas id="camera-canvas" class="hidden"></canvas>
 
+                            <!-- Optical Leaf Framing Guide Overlay -->
+                            <div class="absolute inset-0 pointer-events-none border-2 border-emerald-400/40 rounded-xl m-6 flex items-center justify-center">
+                                <span class="text-[11px] font-medium text-emerald-300 bg-black/60 px-2 py-0.5 rounded backdrop-blur-sm">จัดใบพืชให้อยู่ในกรอบ</span>
+                            </div>
+
                             <div id="camera-loading" class="absolute inset-0 flex flex-col items-center justify-center text-mint-300 bg-[#070E0A]/95 text-sm px-6 text-center gap-3">
                                 <svg class="w-7 h-7 text-emerald-400 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" aria-hidden="true">
                                     <path d="M21 12a9 9 0 1 1-6.219-8.56"></path>
@@ -631,37 +752,56 @@
 
     </main>
 
-    <!-- Minimal Dark Obsidian Footer -->
-    <footer class="border-t border-obsidian-600 bg-[#050A07] py-4 px-4 text-xs text-mint-500 mt-8">
+    <!-- Clean Generic Footer (Removed Student & Advisor Names as Requested) -->
+    <footer class="border-t border-obsidian-600 bg-[#050A07] py-4 px-4 text-xs text-mint-500 mt-8 transition-colors">
         <div class="max-w-6xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
-            <p class="font-medium text-mint-300">โครงงานบูรณาการ 4 รายวิชา (CSI410, CSI411, CSI413, CSI414) ปีการศึกษา 2569</p>
-            <p>กลุ่มที่ 32: ศิวัตม์ แก้วหนองแสง & ธนวรรธน์ ณรงค์วงศ์วัฒนา · ที่ปรึกษา: ผศ.ดร. วรพงศ์ รังสีเกษมกุล</p>
+            <p class="font-medium text-mint-300">AgriShield AI V2 — ระบบวินิจฉัยโรคพืชและคำแนะนำสารชีวภัณฑ์ (SDG 12)</p>
+            <p>โครงงานบูรณาการ 4 รายวิชา (CSI410, CSI411, CSI413, CSI414) ปีการศึกษา 2569</p>
         </div>
     </footer>
-
-    <!-- Confusion Matrix Lightbox Modal -->
-    <dialog id="matrix-modal" class="modal-surface rounded-2xl max-w-5xl w-[94vw] shadow-2xl bg-[#0D1712] border border-[#1E352A] text-[#ECFDF5] p-5">
-        <div class="pb-3 mb-3 border-b border-obsidian-600 flex items-center justify-between gap-4">
-            <div>
-                <h2 class="text-sm sm:text-base font-bold text-mint-100">Confusion Matrices — 4 Crop Specialist Models</h2>
-                <p class="text-xs text-mint-500">การกระจายตัวของผลการทดสอบแยกตาม 4 โมเดลผู้เชี่ยวชาญ (Rice, Corn, Potato, Tomato)</p>
-            </div>
-            <button type="button" onclick="closeMatrixModal()" aria-label="ปิดหน้าต่าง Confusion Matrix" class="p-1.5 rounded-lg text-mint-300 hover:text-mint-100 hover:bg-obsidian-800 transition-colors">
-                <svg class="w-5 h-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg>
-            </button>
-        </div>
-        <div class="max-h-[74vh] overflow-auto flex items-center justify-center rounded-xl bg-white p-2">
-            <img src="/static/confusion_matrix_v2.png" alt="Confusion Matrices ของโมเดลทั้ง 4 พืช (Rice, Corn, Potato, Tomato)" class="max-w-full h-auto rounded-lg">
-        </div>
-    </dialog>
 
     <!-- Interactive Logic -->
     <script>
         let cameraStream = null;
         let isSubmitting = false;
+
+        // Theme Switcher Logic (Dark Emerald vs Emerald White)
+        function applyTheme(theme) {
+            const icon = document.getElementById('theme-toggle-icon');
+            const text = document.getElementById('theme-toggle-text');
+            const btn = document.getElementById('theme-toggle-btn');
+
+            if (theme === 'light') {
+                document.documentElement.setAttribute('data-theme', 'light');
+                if (icon) icon.textContent = '🌙';
+                if (text) text.textContent = 'ธีมเขียว-ดำ';
+                if (btn) {
+                    btn.className = "inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg border transition-all cursor-pointer bg-[#EDF6F1] hover:bg-[#DFEEE5] text-[#0A2318] border-[#CFE4D7] shadow-sm";
+                }
+            } else {
+                document.documentElement.removeAttribute('data-theme');
+                if (icon) icon.textContent = '☀️';
+                if (text) text.textContent = 'ธีมเขียว-ขาว';
+                if (btn) {
+                    btn.className = "inline-flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg border transition-all cursor-pointer bg-obsidian-900 hover:bg-obsidian-800 text-mint-200 border-obsidian-600 shadow-sm";
+                }
+            }
+            try {
+                localStorage.setItem('agrishield_theme', theme);
+            } catch (e) {}
+        }
+
+        function toggleTheme() {
+            const current = localStorage.getItem('agrishield_theme') || 'dark';
+            const next = (current === 'dark') ? 'light' : 'dark';
+            applyTheme(next);
+        }
+
+        // Initialize Theme on load
+        (function() {
+            const saved = localStorage.getItem('agrishield_theme') || 'dark';
+            applyTheme(saved);
+        })();
 
         const CROP_BADGES = {
             all: 'Auto Active',
@@ -910,28 +1050,6 @@
                 stopCamera();
                 document.getElementById('snapshot-form').submit();
             }, 'image/jpeg', 0.92);
-        }
-
-        const matrixModal = document.getElementById('matrix-modal');
-        function openMatrixModal() {
-            if (matrixModal && typeof matrixModal.showModal === 'function') {
-                matrixModal.showModal();
-            }
-        }
-        function closeMatrixModal() {
-            if (matrixModal && matrixModal.open) {
-                matrixModal.close();
-            }
-        }
-        if (matrixModal) {
-            matrixModal.addEventListener('click', (e) => {
-                const rect = matrixModal.getBoundingClientRect();
-                const inDialog = (
-                    rect.top <= e.clientY && e.clientY <= rect.top + rect.height &&
-                    rect.left <= e.clientX && e.clientX <= rect.left + rect.width
-                );
-                if (!inDialog) closeMatrixModal();
-            });
         }
     </script>
 </body>

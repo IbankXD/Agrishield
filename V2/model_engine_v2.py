@@ -242,7 +242,8 @@ class AgriShieldV2Engine:
         leaf_stats = self._analyze_leaf(orig_img)
 
         # 0. ตรวจสอบภาพที่ไม่ใช่พืช (Non-Plant)
-        if leaf_stats["green_area_ratio"] < 0.015 and leaf_stats["internal_lesion_ratio"] < 0.02:
+        if (leaf_stats["green_area_ratio"] < 0.05 and leaf_stats["g_excess"] < 12.0) or \
+           (leaf_stats["green_area_ratio"] < 0.02 and leaf_stats["internal_lesion_ratio"] < 0.03):
             return {
                 "top1_class": "Out_of_Scope___Non_Plant",
                 "confidence": 0.0,
@@ -250,7 +251,7 @@ class AgriShieldV2Engine:
                 "heatmap_path": os.path.basename(image_path),
                 "is_healthy": False,
                 "is_out_of_scope": True,
-                "engine": f"AgriShield V2 ({self.device})"
+                "engine": f"AgriShield V2 Leaf Filter ({self.device})"
             }
 
         # 1. ตัดสินใจเลือกโมเดล (Active Specialist Model)
@@ -338,14 +339,25 @@ class AgriShieldV2Engine:
         top1_prob = float(top2_p[0].item()) * 100.0
         top1_class = classes[top1_idx]
 
-        # Check OOD for this crop (เช่น ถ้าเลือกโมเดลข้าวแต่ส่งใบหม่อนมา)
+        # Check OOD for this crop (เช่น ถ้าเลือกโมเดลข้าวแต่ส่งใบหม่อนมา หรือความมั่นใจต่ำเกินไป)
         is_ood = False
         if leaf_stats["border_brown_bg_ratio"] > 0.30 and leaf_stats["g_excess"] > 45.0:
             is_ood = True
-        elif top1_prob < 40.0:
+        elif top1_prob < 65.0:
             is_ood = True
 
         if is_ood:
+            # หากความมั่นใจต่ำกว่า 65% หรือไม่มีสัดส่วนสีเขียวของพืชเพียงพอ จัดเป็นภาพไม่ใช่พืช / นอกขอบเขต
+            if (leaf_stats["green_area_ratio"] < 0.25 and leaf_stats["g_excess"] < 30.0) or top1_prob < 55.0:
+                return {
+                    "top1_class": "Out_of_Scope___Non_Plant",
+                    "confidence": round(top1_prob, 2),
+                    "top2_info": None,
+                    "heatmap_path": os.path.basename(image_path),
+                    "is_healthy": False,
+                    "is_out_of_scope": True,
+                    "engine": f"AgriShield V2 OOD Filter ({self.device})"
+                }
             leaf_healthy = (leaf_stats["g_excess"] >= 28.0 and leaf_stats["internal_lesion_ratio"] < 0.10)
             ood_class = "Out_of_Scope___Healthy_Leaf" if leaf_healthy else "Out_of_Scope___Suspected_Disease"
             health_conf = min(98.5, max(78.0, 75.0 + (leaf_stats["g_excess"] * 0.28)))
