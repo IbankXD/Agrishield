@@ -517,11 +517,11 @@ class AgriShieldV2Engine:
 
     def _fallback_prediction(self, orig_img, image_path, crop_filter):
         return {
-            "top1_class": "Tomato___healthy",
-            "confidence": 95.0,
+            "top1_class": "Out_of_Scope___Non_Plant",
+            "confidence": 0.0,
             "top2_info": None,
             "heatmap_path": os.path.basename(image_path),
-            "is_healthy": True,
-            "is_out_of_scope": False,
-            "engine": "Fallback Engine"
+            "is_healthy": False,
+            "is_out_of_scope": True,
+            "engine": "⚠️ โมเดล AI ยังไม่พร้อมทำงาน (ไม่พบไฟล์ .pth หรือยังไม่ได้ติดตั้ง PyTorch)"
         }

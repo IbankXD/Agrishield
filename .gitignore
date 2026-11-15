@@ -4,9 +4,10 @@ __pycache__/
 *$py.class
 *.pyd
 
-# PyTorch checkpoints and large model binaries (>15MB)
-*.pth
+# PyTorch checkpoints (Allow V2 specialist models)
 *.zip
+*.pth
+!V2/models/*.pth
 
 # Virtual Environments
 venv/
