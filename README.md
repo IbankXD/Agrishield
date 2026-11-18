@@ -67,10 +67,10 @@ pip install -r V2/requirements.txt
 * **วิธีที่ 2 (ผ่าน Command Line / Terminal):**
   ```bash
   cd V2
-  python server.py 8001
+  python server.py 8000
   ```
 
-เปิดเบราว์เซอร์ไปที่: **http://127.0.0.1:8001**
+เปิดเบราว์เซอร์ไปที่: **http://127.0.0.1:8000** (หรือ **http://127.0.0.1:8001** หากพอร์ต 8000 ไม่ว่าง)
 
 ---
 

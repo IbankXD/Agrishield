@@ -327,18 +327,32 @@ class AgriShieldV2Handler(BaseHTTPRequestHandler):
         pass
 
 
-def run(port=8001):
-    server_address = ("127.0.0.1", port)
-    httpd = HTTPServer(server_address, AgriShieldV2Handler)
-    print(f"[AgriShield V2 Server] พร้อมใช้งานที่ http://127.0.0.1:{port}")
+def run(port=8000):
+    try:
+        server_address = ("127.0.0.1", port)
+        httpd = HTTPServer(server_address, AgriShieldV2Handler)
+    except OSError:
+        port = 8001
+        server_address = ("127.0.0.1", port)
+        httpd = HTTPServer(server_address, AgriShieldV2Handler)
+
+    print(f"\n=======================================================")
+    print(f"🚀 AgriShield AI V2 พร้อมใช้งานแล้วที่: http://127.0.0.1:{port}")
+    print(f"=======================================================\n")
+    try:
+        import webbrowser
+        webbrowser.open(f"http://127.0.0.1:{port}")
+    except Exception:
+        pass
+
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:
-        pass
+        print("\n[AgriShield V2 Server] ปิดการทำงานเรียบร้อย")
 
 
 if __name__ == "__main__":
-    port = 8001
+    port = 8000
     if len(sys.argv) > 1 and sys.argv[1].isdigit():
         port = int(sys.argv[1])
     run(port)
