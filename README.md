@@ -15,8 +15,10 @@ AgriShield AI V2 ทำงานด้วย **สถาปัตยกรรม
 * **Backbone:** MobileNetV3 Large (Pretrained บน ImageNet)
 * **Dataset Partition:** Stratified Split 70% Train : 15% Validation : 15% Test
 * **Explainable AI:** Grad-CAM (Target Layer: `features[-1]`) วิเคราะห์พื้นที่ความสนใจของโมเดล
-* **Biocontrol Knowledge Base:** ฐานข้อมูลสารชีวภัณฑ์และวิธีป้องกันกำจัดโรคภาษาไทย 23 คลาส อ้างอิงกรมวิชาการเกษตร (SDG 12)
-* **Dual Theme UI:** สลับโหมด ☀️ **ธีมเขียว-ขาว (Emerald White)** และ 🌙 **ธีมเขียว-ดำ (Dark Emerald)** ได้ในคลิกเดียว
+* **Biocontrol Knowledge Base & Dosage Calculator:** ฐานข้อมูลสารชีวภัณฑ์ 23 คลาส อ้างอิงกรมวิชาการเกษตร (SDG 12) พร้อมเครื่องคำนวณปริมาณหัวเชื้อและน้ำตามขนาดถังพ่น (16L, 20L, 200L) หรือขนาดพื้นที่แปลงจริง
+* **7-Day Field Recovery Roadmap:** แผนปฏิบัติการฟื้นฟูแปลงเกษตรทีละขั้นตอน (Day 1, Days 2-3, Day 7) เพื่อการรักษาโรคพืชที่เห็นผลจริง
+* **Field Inspection History Log:** ระบบบันทึกประวัติการสแกนตรวจแปลงย้อนหลัง พร้อมแถบประเมินระดับความรุนแรงของโรค
+* **Dual Theme UI:** สลับโหมด ☀️ **ธีมเขียว-ขาว (Emerald White)** และ 🌙 **ธีมเขียว-ดำ (Dark Emerald)** ได้ในคลิกเดียว พร้อมจัดวาง Layout สมดุลตามหลักสรีรศาสตร์ UX
 
 ---
 
