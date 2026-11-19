@@ -179,7 +179,14 @@ class AgriShieldV2Engine:
         r, g, b = img_np[:, :, 0], img_np[:, :, 1], img_np[:, :, 2]
         white_bg = (r > 235) & (g > 235) & (b > 235)
         white_bg_ratio = float(white_bg.mean())
-        green_leaf = (g > r + 6) & (g > b + 8) & (g > 40)
+
+        max_c = np.maximum(np.maximum(r, g), b)
+        min_c = np.minimum(np.minimum(r, g), b)
+        sat = (max_c - min_c) / np.maximum(max_c, 1.0)
+
+        # คลอโรฟิลล์สีเขียวของเนื้อเยื่อพืชจริง (Green Dominance + Saturation >= 0.14)
+        # ป้องกันแสงสะท้อนในห้อง ผนังห้อง เสื้อผ้าสีเทา หรือแสงไฟฟลูออเรสเซนต์ถูกนับเป็นพืช
+        green_leaf = (g > r + 8) & (g > b + 8) & (g > 42) & (sat > 0.14)
         green_area_ratio = float(green_leaf.mean())
         g_excess = float((g[green_leaf] - r[green_leaf]).mean()) if green_leaf.sum() > 50 else 0.0
 
@@ -228,7 +235,7 @@ class AgriShieldV2Engine:
         top_green = float(green_leaf[:70, :].mean())
         bot_green = float(green_leaf[154:, :].mean())
         # ตรวจจับภาพคน/วิวมุมกว้างที่มีต้นไม้อยู่ด้านหลัง (สีเขียวอยู่เฉพาะขอบบน แต่ส่วนล่างเป็นคน/พื้นดิน)
-        is_scenery_background_tree = bool(bot_green < 0.04 and top_green > 0.35 and green_area_ratio < 0.45)
+        is_scenery_background_tree = bool(bot_green < 0.04 and top_green > 0.25 and green_area_ratio < 0.45)
 
         return {
             "white_bg_ratio": white_bg_ratio,
@@ -247,10 +254,11 @@ class AgriShieldV2Engine:
 
         leaf_stats = self._analyze_leaf(orig_img)
 
-        # 0. ตรวจสอบภาพที่ไม่ใช่ใบพืช (Non-Plant หรือ ภาพบุคคล/วิวทิวทัศน์ที่มีต้นไม้เป็นฉากหลัง)
+        # 0. ตรวจสอบภาพที่ไม่ใช่ใบพืช (Non-Plant, เซลฟี่ในห้อง, ภาพบุคคล หรือวิวทิวทัศน์ที่มีต้นไม้เป็นฉากหลัง)
         if leaf_stats.get("is_scenery_background_tree", False) or \
-           (leaf_stats["green_area_ratio"] < 0.05 and leaf_stats["g_excess"] < 12.0) or \
-           (leaf_stats["green_area_ratio"] < 0.02 and leaf_stats["internal_lesion_ratio"] < 0.03):
+           leaf_stats["green_area_ratio"] < 0.04 or \
+           (leaf_stats["green_area_ratio"] < 0.08 and leaf_stats["g_excess"] < 15.0) or \
+           (leaf_stats["green_area_ratio"] < 0.05 and leaf_stats["internal_lesion_ratio"] < 0.03):
             return {
                 "top1_class": "Out_of_Scope___Non_Plant",
                 "confidence": 0.0,
@@ -264,11 +272,12 @@ class AgriShieldV2Engine:
         # 1. ตัดสินใจเลือกโมเดล (Active Specialist Model)
         crop_key = (crop_filter or "all").lower().strip()
         auto_detected = False
+        router_top1_prob = 1.0
 
         if crop_key not in self.specialist_models:
             # Auto-routing: ถ้าเลือก "all" ให้ใช้ Router คัดเลือกว่าเป็นพืชชนิดไหน
             auto_detected = True
-            crop_key = self._route_crop(orig_img, leaf_stats)
+            crop_key, router_top1_prob = self._route_crop(orig_img, leaf_stats)
 
         active_model = self.specialist_models.get(crop_key)
         classes = CROP_CLASSES[crop_key]
@@ -323,11 +332,13 @@ class AgriShieldV2Engine:
             else:
                 probs = p_spec
 
-            # ชดเชย White-Background Studio Cutout Bias (กิ่งใบประกอบไดคัทพื้นขาวล้วนที่คลอโรฟิลล์เขียวสดไร้รอยโรค)
+            # ชดเชย White-Background Studio Cutout Bias เฉพาะกิ่งใบประกอบ (เช่น มะเขือเทศ/มันฝรั่ง) ที่ Router มั่นใจแล้วเท่านั้น
             if (
                 leaf_stats["white_bg_ratio"] > 0.35
+                and leaf_stats["is_compound_broadleaf"]
                 and leaf_stats["g_excess"] > 30.0
                 and leaf_stats["internal_lesion_ratio"] < 0.03
+                and (not auto_detected or router_top1_prob >= 0.70)
             ):
                 healthy_candidates = [i for i, c in enumerate(classes) if "healthy" in c.lower()]
                 if healthy_candidates:
@@ -346,16 +357,19 @@ class AgriShieldV2Engine:
         top1_prob = float(top2_p[0].item()) * 100.0
         top1_class = classes[top1_idx]
 
-        # Check OOD for this crop (เช่น ถ้าเลือกโมเดลข้าวแต่ส่งใบหม่อนมา หรือความมั่นใจต่ำเกินไป)
+        # Check OOD for this crop (เช่น ใบกระท่อม/ใบหม่อน/พืชอื่นนอกขอบเขต 4 ชนิด หรือความมั่นใจต่ำ)
         is_ood = False
         if leaf_stats["border_brown_bg_ratio"] > 0.30 and leaf_stats["g_excess"] > 45.0:
+            is_ood = True
+        elif auto_detected and leaf_stats["white_bg_ratio"] > 0.35 and (not leaf_stats["is_compound_broadleaf"]) and crop_key in ("tomato", "potato"):
+            # ภาพสต็อกใบเดี่ยวพื้นหลังขาว (เช่น ใบกระท่อม, ใบพลู, ใบมะม่วง) ไม่ใช่ใบประกอบของมะเขือเทศ/มันฝรั่ง
             is_ood = True
         elif top1_prob < 65.0:
             is_ood = True
 
         if is_ood:
-            # หากความมั่นใจต่ำกว่า 65% หรือไม่มีสัดส่วนสีเขียวของพืชเพียงพอ จัดเป็นภาพไม่ใช่พืช / นอกขอบเขต
-            if (leaf_stats["green_area_ratio"] < 0.25 and leaf_stats["g_excess"] < 30.0) or top1_prob < 55.0:
+            # จัดเป็น Non-Plant เฉพาะเมื่อไม่มีสัดส่วนเนื้อใบสีเขียวแท้จริงเท่านั้น (ไม่ปัดใบพืชจริงเป็น Non-Plant)
+            if leaf_stats["green_area_ratio"] < 0.15 and leaf_stats["g_excess"] < 25.0:
                 return {
                     "top1_class": "Out_of_Scope___Non_Plant",
                     "confidence": round(top1_prob, 2),
@@ -365,7 +379,7 @@ class AgriShieldV2Engine:
                     "is_out_of_scope": True,
                     "engine": f"AgriShield V2 OOD Filter ({self.device})"
                 }
-            leaf_healthy = (leaf_stats["g_excess"] >= 28.0 and leaf_stats["internal_lesion_ratio"] < 0.10)
+            leaf_healthy = (leaf_stats["g_excess"] >= 26.0 and leaf_stats["internal_lesion_ratio"] < 0.10)
             ood_class = "Out_of_Scope___Healthy_Leaf" if leaf_healthy else "Out_of_Scope___Suspected_Disease"
             health_conf = min(98.5, max(78.0, 75.0 + (leaf_stats["g_excess"] * 0.28)))
             heatmap_path = self._generate_gradcam(orig_img, image_path, crop_key, top1_idx, output, is_healthy=leaf_healthy)
@@ -407,22 +421,25 @@ class AgriShieldV2Engine:
             "engine": f"MobileNetV3 {crop_key.capitalize()} Specialist Model ({mode_label})"
         }
 
-    def _route_crop(self, orig_img: Image.Image, leaf_stats: dict = None) -> str:
-        """คัดเลือกว่าเป็นพืชชนิดไหนจาก 4 ชนิด (Router)"""
+    def _route_crop(self, orig_img: Image.Image, leaf_stats: dict = None):
+        """คัดเลือกว่าเป็นพืชชนิดไหนจาก 4 ชนิด (Router) โดยใช้ค่าความน่าจะเป็นสูงสุดของคลาส (ลดความลำเอียงจำนวนคลาส)"""
         if self.unified_model:
             with torch.no_grad():
                 inp = self.transform(orig_img).unsqueeze(0).to(self.device)
                 out = self.unified_model(inp)
                 probs = F.softmax(out[0], dim=0)
-                crop_scores = {"tomato": 0.0, "rice": 0.0, "corn": 0.0, "potato": 0.0}
+                crop_max = {"tomato": 0.0, "rice": 0.0, "corn": 0.0, "potato": 0.0}
                 for i, c in enumerate(UNIFIED_23_CLASSES):
-                    for ck in crop_scores:
-                        if c.lower().startswith(ck):
-                            crop_scores[ck] += float(probs[i])
+                    p = float(probs[i])
+                    for ck in crop_max:
+                        if c.lower().startswith(ck) and p > crop_max[ck]:
+                            crop_max[ck] = p
                 if leaf_stats and leaf_stats.get("white_bg_ratio", 0.0) > 0.35 and leaf_stats.get("is_compound_broadleaf", False):
-                    return "tomato" if crop_scores["tomato"] >= crop_scores["potato"] else "potato"
-                return max(crop_scores, key=crop_scores.get)
-        return "tomato"
+                    best_crop = "tomato" if crop_max["tomato"] >= crop_max["potato"] else "potato"
+                    return best_crop, crop_max[best_crop]
+                best_crop = max(crop_max, key=crop_max.get)
+                return best_crop, crop_max[best_crop]
+        return "tomato", 0.0
 
     def _generate_gradcam(self, orig_img: Image.Image, image_path: str, model_key: str, class_idx: int, output_tensor, is_healthy: bool):
         try:

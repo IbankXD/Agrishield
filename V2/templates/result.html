@@ -867,7 +867,7 @@
         })();
 
         // =====================================================================
-        // 📜 Save Scan to Local History
+        // 📜 Save Scan to Local History (With Full Diagnostic Details)
         // =====================================================================
         (function recordScanHistory() {
             try {
@@ -877,18 +877,26 @@
                     date: new Date().toLocaleDateString('th-TH', { 
                         day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' 
                     }),
-                    thaiName: "{{ recommendation.thai_name }}",
-                    crop: "{{ recommendation.crop }}",
+                    thaiName: `{{ recommendation.thai_name }}`,
+                    crop: `{{ recommendation.crop }}`,
                     top1Class: top1Class,
-                    confidence: "{{ confidence }}",
-                    origImage: "{{ orig_image }}",
+                    confidence: `{{ confidence }}`,
+                    origImage: `{{ orig_image }}`,
+                    heatmapImage: `{{ heatmap_image }}`,
+                    statusLabel: `{{ status_label }}`,
+                    engineLabel: `{{ engine_label }}`,
+                    cause: `{{ recommendation.cause }}`,
+                    symptoms: `{{ recommendation.symptoms }}`,
+                    biocontrol: `{{ recommendation.biocontrol_treatment }}`,
+                    naturalManagement: `{{ recommendation.natural_management }}`,
+                    sdgImpact: `{{ recommendation.sdg_impact }}`,
                     isHealthy: isHealthy
                 };
 
                 let history = JSON.parse(localStorage.getItem('agrishield_history') || '[]');
                 history = history.filter(item => item.origImage !== newRecord.origImage);
                 history.unshift(newRecord);
-                if (history.length > 8) history = history.slice(0, 8);
+                if (history.length > 20) history = history.slice(0, 20);
                 localStorage.setItem('agrishield_history', JSON.stringify(history));
             } catch (e) {
                 console.warn('LocalStorage save history failed', e);
