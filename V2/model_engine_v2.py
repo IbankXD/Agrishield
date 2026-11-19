@@ -225,13 +225,19 @@ class AgriShieldV2Engine:
                 transitions.append(crossings)
         avg_crossings = float(np.mean(transitions)) if transitions else 1.0
 
+        top_green = float(green_leaf[:70, :].mean())
+        bot_green = float(green_leaf[154:, :].mean())
+        # ตรวจจับภาพคน/วิวมุมกว้างที่มีต้นไม้อยู่ด้านหลัง (สีเขียวอยู่เฉพาะขอบบน แต่ส่วนล่างเป็นคน/พื้นดิน)
+        is_scenery_background_tree = bool(bot_green < 0.04 and top_green > 0.35 and green_area_ratio < 0.45)
+
         return {
             "white_bg_ratio": white_bg_ratio,
             "green_area_ratio": green_area_ratio,
             "g_excess": g_excess,
             "border_brown_bg_ratio": border_brown_bg_ratio,
             "internal_lesion_ratio": internal_lesion_ratio,
-            "is_compound_broadleaf": avg_crossings > 2.2
+            "is_compound_broadleaf": avg_crossings > 2.2,
+            "is_scenery_background_tree": is_scenery_background_tree
         }
 
     def predict(self, image_path: str, crop_filter: str = "all"):
@@ -241,8 +247,9 @@ class AgriShieldV2Engine:
 
         leaf_stats = self._analyze_leaf(orig_img)
 
-        # 0. ตรวจสอบภาพที่ไม่ใช่พืช (Non-Plant)
-        if (leaf_stats["green_area_ratio"] < 0.05 and leaf_stats["g_excess"] < 12.0) or \
+        # 0. ตรวจสอบภาพที่ไม่ใช่ใบพืช (Non-Plant หรือ ภาพบุคคล/วิวทิวทัศน์ที่มีต้นไม้เป็นฉากหลัง)
+        if leaf_stats.get("is_scenery_background_tree", False) or \
+           (leaf_stats["green_area_ratio"] < 0.05 and leaf_stats["g_excess"] < 12.0) or \
            (leaf_stats["green_area_ratio"] < 0.02 and leaf_stats["internal_lesion_ratio"] < 0.03):
             return {
                 "top1_class": "Out_of_Scope___Non_Plant",
