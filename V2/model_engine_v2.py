@@ -225,13 +225,19 @@ class AgriShieldV2Engine:
                 transitions.append(crossings)
         avg_crossings = float(np.mean(transitions)) if transitions else 1.0
 
+        top_green = float(green_leaf[:70, :].mean())
+        bot_green = float(green_leaf[154:, :].mean())
+        # ตรวจจับภาพคน/วิวมุมกว้างที่มีต้นไม้อยู่ด้านหลัง (สีเขียวอยู่เฉพาะขอบบน แต่ส่วนล่างเป็นคน/พื้นดิน)
+        is_scenery_background_tree = bool(bot_green < 0.04 and top_green > 0.35 and green_area_ratio < 0.45)
+
         return {
             "white_bg_ratio": white_bg_ratio,
             "green_area_ratio": green_area_ratio,
             "g_excess": g_excess,
             "border_brown_bg_ratio": border_brown_bg_ratio,
             "internal_lesion_ratio": internal_lesion_ratio,
-            "is_compound_broadleaf": avg_crossings > 2.2
+            "is_compound_broadleaf": avg_crossings > 2.2,
+            "is_scenery_background_tree": is_scenery_background_tree
         }
 
     def predict(self, image_path: str, crop_filter: str = "all"):
@@ -241,8 +247,10 @@ class AgriShieldV2Engine:
 
         leaf_stats = self._analyze_leaf(orig_img)
 
-        # 0. ตรวจสอบภาพที่ไม่ใช่พืช (Non-Plant)
-        if leaf_stats["green_area_ratio"] < 0.015 and leaf_stats["internal_lesion_ratio"] < 0.02:
+        # 0. ตรวจสอบภาพที่ไม่ใช่ใบพืช (Non-Plant หรือ ภาพบุคคล/วิวทิวทัศน์ที่มีต้นไม้เป็นฉากหลัง)
+        if leaf_stats.get("is_scenery_background_tree", False) or \
+           (leaf_stats["green_area_ratio"] < 0.05 and leaf_stats["g_excess"] < 12.0) or \
+           (leaf_stats["green_area_ratio"] < 0.02 and leaf_stats["internal_lesion_ratio"] < 0.03):
             return {
                 "top1_class": "Out_of_Scope___Non_Plant",
                 "confidence": 0.0,
@@ -250,7 +258,7 @@ class AgriShieldV2Engine:
                 "heatmap_path": os.path.basename(image_path),
                 "is_healthy": False,
                 "is_out_of_scope": True,
-                "engine": f"AgriShield V2 ({self.device})"
+                "engine": f"AgriShield V2 Leaf Filter ({self.device})"
             }
 
         # 1. ตัดสินใจเลือกโมเดล (Active Specialist Model)
@@ -338,14 +346,25 @@ class AgriShieldV2Engine:
         top1_prob = float(top2_p[0].item()) * 100.0
         top1_class = classes[top1_idx]
 
-        # Check OOD for this crop (เช่น ถ้าเลือกโมเดลข้าวแต่ส่งใบหม่อนมา)
+        # Check OOD for this crop (เช่น ถ้าเลือกโมเดลข้าวแต่ส่งใบหม่อนมา หรือความมั่นใจต่ำเกินไป)
         is_ood = False
         if leaf_stats["border_brown_bg_ratio"] > 0.30 and leaf_stats["g_excess"] > 45.0:
             is_ood = True
-        elif top1_prob < 40.0:
+        elif top1_prob < 65.0:
             is_ood = True
 
         if is_ood:
+            # หากความมั่นใจต่ำกว่า 65% หรือไม่มีสัดส่วนสีเขียวของพืชเพียงพอ จัดเป็นภาพไม่ใช่พืช / นอกขอบเขต
+            if (leaf_stats["green_area_ratio"] < 0.25 and leaf_stats["g_excess"] < 30.0) or top1_prob < 55.0:
+                return {
+                    "top1_class": "Out_of_Scope___Non_Plant",
+                    "confidence": round(top1_prob, 2),
+                    "top2_info": None,
+                    "heatmap_path": os.path.basename(image_path),
+                    "is_healthy": False,
+                    "is_out_of_scope": True,
+                    "engine": f"AgriShield V2 OOD Filter ({self.device})"
+                }
             leaf_healthy = (leaf_stats["g_excess"] >= 28.0 and leaf_stats["internal_lesion_ratio"] < 0.10)
             ood_class = "Out_of_Scope___Healthy_Leaf" if leaf_healthy else "Out_of_Scope___Suspected_Disease"
             health_conf = min(98.5, max(78.0, 75.0 + (leaf_stats["g_excess"] * 0.28)))
@@ -505,11 +524,11 @@ class AgriShieldV2Engine:
 
     def _fallback_prediction(self, orig_img, image_path, crop_filter):
         return {
-            "top1_class": "Tomato___healthy",
-            "confidence": 95.0,
+            "top1_class": "Out_of_Scope___Non_Plant",
+            "confidence": 0.0,
             "top2_info": None,
             "heatmap_path": os.path.basename(image_path),
-            "is_healthy": True,
-            "is_out_of_scope": False,
-            "engine": "Fallback Engine"
+            "is_healthy": False,
+            "is_out_of_scope": True,
+            "engine": "⚠️ โมเดล AI ยังไม่พร้อมทำงาน (ไม่พบไฟล์ .pth หรือยังไม่ได้ติดตั้ง PyTorch)"
         }
