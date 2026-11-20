@@ -1,11 +1,11 @@
-# AgriShield AI V2 🛡️🌿
-> ระบบผู้เชี่ยวชาญ AI วินิจฉัยโรคพืช 4 ชนิดเศรษฐกิจ (ข้าว, มะเขือเทศ, ข้าวโพด, มันฝรั่ง) พร้อม Explainable AI (Grad-CAM) และคำแนะนำการใช้สารชีวภัณฑ์ (SDG 12)
+# AgriShield AI 🛡️🌿
+> ระบบผู้เชี่ยวชาญ AI วินิจฉัยโรคพืช 4 ชนิดเศรษฐกิจ (ข้าว, มะเขือเทศ, ข้าวโพด, มันฝรั่ง) สไตล์ Organic Biophilic พร้อม Explainable AI (Grad-CAM) และคำแนะนำการใช้สารชีวภัณฑ์ (SDG 12)
 
 ---
 
 ## 📌 ภาพรวมสถาปัตยกรรม (Architecture Overview)
 
-AgriShield AI V2 ทำงานด้วย **สถาปัตยกรรมโมเดลผู้เชี่ยวชาญเฉพาะทาง (4 Modular Specialist Models)** แบ่งโมเดลตามชนิดพืชเพื่อความแม่นยำสูงสุด ลดการสับสนข้ามชนิดพืช:
+AgriShield AI ทำงานด้วย **สถาปัตยกรรมโมเดลผู้เชี่ยวชาญเฉพาะทาง (4 Modular Specialist Models)** แบ่งโมเดลตามชนิดพืชเพื่อความแม่นยำสูงสุด ลดการสับสนข้ามชนิดพืช:
 
 1. **🌾 ข้าว (Rice Specialist):** 6 คลาสโรค (ขอบใบแห้ง, ใบจุดสีน้ำตาล, โรคไหม้, ใบขีดไหม้, กาบใบแห้ง, ใบปกติ)
 2. **🌽 ข้าวโพด (Corn Specialist):** 4 คลาสโรค (ราสนิม, ใบจุดสีเทา, ใบไหม้แผลใหญ่, ใบปกติ)
@@ -17,8 +17,8 @@ AgriShield AI V2 ทำงานด้วย **สถาปัตยกรรม
 * **Explainable AI:** Grad-CAM (Target Layer: `features[-1]`) วิเคราะห์พื้นที่ความสนใจของโมเดล
 * **Biocontrol Knowledge Base & Dosage Calculator:** ฐานข้อมูลสารชีวภัณฑ์ 23 คลาส อ้างอิงกรมวิชาการเกษตร (SDG 12) พร้อมเครื่องคำนวณปริมาณหัวเชื้อและน้ำตามขนาดถังพ่น (16L, 20L, 200L) หรือขนาดพื้นที่แปลงจริง
 * **7-Day Field Recovery Roadmap:** แผนปฏิบัติการฟื้นฟูแปลงเกษตรทีละขั้นตอน (Day 1, Days 2-3, Day 7) เพื่อการรักษาโรคพืชที่เห็นผลจริง
-* **Field Inspection History Log:** ระบบบันทึกประวัติการสแกนตรวจแปลงย้อนหลัง พร้อมแถบประเมินระดับความรุนแรงของโรค
-* **Dual Theme UI:** สลับโหมด ☀️ **ธีมเขียว-ขาว (Emerald White)** และ 🌙 **ธีมเขียว-ดำ (Dark Emerald)** ได้ในคลิกเดียว พร้อมจัดวาง Layout สมดุลตามหลักสรีรศาสตร์ UX
+* **Field Inspection History Carousel:** ระบบบันทึกประวัติการสแกนตรวจแปลงย้อนหลังแบบแถบสไลด์เลื่อนซ้าย-ขวา พร้อมปุ่มดูผลลัพธ์ย้อนหลังทันที
+* **Organic Biophilic Design:** ออกแบบสไตล์ธรรมชาติโทนเขียวผืนป่า-ครีมอบอุ่น รองรับทั้ง ☀️ โหมดสว่าง และ 🌙 โหมดกลางคืน (Dark Mode) ปรับตามสภาพแสงหน้างาน
 
 ---
 
@@ -59,23 +59,17 @@ pip install -r V2/requirements.txt
 
 * **วิธีที่ 1 (แนะนำ - สะดวกที่สุด):**
   ดับเบิลคลิกที่ไฟล์:
-  * `run_v3.bat` เพื่อรันเวอร์ชัน **V3 Organic Biophilic Edition** (พอร์ต 8002)
-  * หรือ `run_v2.bat` เพื่อรันเวอร์ชัน **V2 Modern Emerald Edition** (พอร์ต 8000)
-  *(ระบบจะตรวจหา Python ในเครื่องและเปิดเบราว์เซอร์ให้อัตโนมัติ)*
+  ```cmd
+  run.bat
+  ```
+  *(หรือ `run_v2.bat` / `run_v3.bat` — ระบบจะตรวจหา Python ในเครื่องและเปิดเบราว์เซอร์ให้อัตโนมัติทันทีที่พอร์ต 8000)*
 
 * **วิธีที่ 2 (ผ่าน Command Line / Terminal):**
-  * สำหรับ V3:
-    ```bash
-    cd V3
-    python server.py 8002
-    ```
-    เปิดเบราว์เซอร์ไปที่: **http://127.0.0.1:8002**
-  * สำหรับ V2:
-    ```bash
-    cd V2
-    python server.py 8000
-    ```
-    เปิดเบราว์เซอร์ไปที่: **http://127.0.0.1:8000** (หรือ **http://127.0.0.1:8001**)
+  ```bash
+  cd V2
+  python server.py 8000
+  ```
+  เปิดเบราว์เซอร์ไปที่: **http://127.0.0.1:8000** (หรือ **http://127.0.0.1:8001** หากพอร์ต 8000 ไม่ว่าง)
 
 ---
 
@@ -97,17 +91,12 @@ pip install -r V2/requirements.txt
 
 ```
 Agrishield/
-├── run_v3.bat              # Script รันระบบ V3 (Organic Biophilic) บน Port 8002
+├── run.bat                 # Script รันระบบหลัก (คลิกเดียวรันทันทีบน Port 8000)
 ├── run_v2.bat              # Script รันระบบ V2 จาก Root บน Port 8000
+├── run_v3.bat              # Script รันระบบ V3 จาก Root บน Port 8000
 ├── README.md               # เอกสารคู่มือการติดตั้งและรันระบบ
 ├── PRODUCT.md              # สเปกผลิตภัณฑ์และข้อมูลโมเดล
-├── V3/                     # ซอร์สโค้ดระบบ AgriShield AI V3 (Organic Biophilic Edition)
-│   ├── server.py           # Web Server บน Port 8002
-│   ├── run_v3.bat          # สคริปต์คลิกรันเฉพาะโฟลเดอร์ V3
-│   └── templates/          # หน้าจอ V3 Biophilic UI
-│       ├── index.html
-│       └── result.html
-└── V2/                     # ซอร์สโค้ดระบบ AgriShield AI V2
+└── V2/                     # ซอร์สโค้ดระบบ AgriShield AI (Organic Biophilic Edition)
     ├── server.py           # Web Server บน Port 8000 (fallback 8001)
     ├── model_engine_v2.py  # AI Model Engine (Multi-Model + Grad-CAM + OOD Filter)
     ├── recommendation_db.py# ฐานข้อมูลสารชีวภัณฑ์ 23 คลาส (SDG 12)
@@ -120,9 +109,9 @@ Agrishield/
     │   ├── best_agrishield_tomato.pth
     │   └── best_agrishield_mobilenetv3.pth
     ├── static/             # ไฟล์รูปภาพตัวอย่าง, แผนผังผลลัพธ์ และ assets
-    └── templates/          # หน้าจอ Modern Split-Screen & Theme Switcher
-        ├── index.html      # หน้าจอเลือกพืช, ถ่ายภาพ/อัปโหลด และสลับธีม
-        └── result.html     # หน้าจอแสดงผลวินิจฉัย, Grad-CAM และสารชีวภัณฑ์
+    └── templates/          # หน้าจอ Organic Biophilic UI & Theme Switcher
+        ├── index.html      # หน้าจอเลือกพืช, สแกนภาพ, และประวัติการตรวจ
+        └── result.html     # หน้าจอแสดงผลวินิจฉัย, Grad-CAM, สารชีวภัณฑ์ และแผนฟื้นฟู 7 วัน
 ```
 
 ---

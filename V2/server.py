@@ -1,12 +1,11 @@
 # ==============================================================================
-# 🌐 AgriShield AI V2 — Modular Multi-Model Server (Zero External Dependencies)
-# พอร์ต 8001: สถาปัตยกรรม 4 โมเดลผู้เชี่ยวชาญเฉพาะพืช (Rice, Corn, Potato, Tomato)
-# ฝึกสอนด้วยสัดส่วน Train 70% : Val 15% : Test 15% ขจัดปัญหา Class Imbalance
+# 🌿 AgriShield AI — Organic Biophilic Edition (Official Release)
+# พอร์ต 8000: สถาปัตยกรรม 4 โมเดลผู้เชี่ยวชาญเฉพาะพืช (Rice, Corn, Potato, Tomato)
+# พร้อม Explainable AI (Grad-CAM), ฐานข้อมูลสารชีวภัณฑ์ (SDG 12) และ Mobile-Friendly UI
 # ==============================================================================
 import os
 import sys
 
-# บังคับสลับไปใช้ Python 3.14 ที่มี PyTorch ติดตั้งอยู่โดยอัตโนมัติ
 _PY314_EXE = r"C:\Users\door_\AppData\Local\Programs\Python\Python314\python.exe"
 _PY314_SITE = r"C:\Users\door_\AppData\Local\Programs\Python\Python314\Lib\site-packages"
 _PY314_USER_SITE = r"C:\Users\door_\AppData\Roaming\Python\Python314\site-packages"
@@ -18,11 +17,11 @@ for _sp in (_PY314_SITE, _PY314_USER_SITE):
 if (
     os.path.exists(_PY314_EXE)
     and os.path.normcase(sys.executable) != os.path.normcase(_PY314_EXE)
-    and os.environ.get("AGRISHIELD_V2_REEXEC") != "1"
+    and os.environ.get("AGRISHIELD_REEXEC") != "1"
 ):
     import subprocess
     env = os.environ.copy()
-    env["AGRISHIELD_V2_REEXEC"] = "1"
+    env["AGRISHIELD_REEXEC"] = "1"
     sys.exit(subprocess.call([_PY314_EXE] + sys.argv, env=env))
 
 if hasattr(sys.stdout, "reconfigure"):
@@ -42,17 +41,19 @@ from http.server import HTTPServer, BaseHTTPRequestHandler
 from urllib.parse import urlparse
 
 BASE_DIR = Path(__file__).resolve().parent
-sys.path.append(str(BASE_DIR))
+sys.path.insert(0, str(BASE_DIR))
 
 import model_engine_v2
 import recommendation_db
 
 UPLOAD_DIR = BASE_DIR / "static" / "uploads"
 UPLOAD_DIR.mkdir(parents=True, exist_ok=True)
+MODELS_DIR = BASE_DIR / "models"
+SAMPLES_DIR = BASE_DIR / "static" / "samples"
 
-print(f"[AgriShield V2 Server] Python Runtime: {sys.executable}")
-print(f"[AgriShield V2 Server] Models Directory: {BASE_DIR / 'models'}")
-engine = model_engine_v2.AgriShieldV2Engine(models_dir=str(BASE_DIR / "models"))
+print(f"[AgriShield Server] Python Runtime: {sys.executable}")
+print(f"[AgriShield Server] Models Directory: {MODELS_DIR}")
+engine = model_engine_v2.AgriShieldV2Engine(models_dir=str(MODELS_DIR))
 _last_engine_mtime = os.path.getmtime(BASE_DIR / "model_engine_v2.py")
 _last_db_mtime = os.path.getmtime(BASE_DIR / "recommendation_db.py")
 
@@ -69,14 +70,14 @@ def get_active_engine():
         cur_eng_mtime = os.path.getmtime(BASE_DIR / "model_engine_v2.py")
         if cur_eng_mtime != _last_engine_mtime or not getattr(engine, "is_torch_ready", False):
             importlib.reload(model_engine_v2)
-            engine = model_engine_v2.AgriShieldV2Engine(models_dir=str(BASE_DIR / "models"))
+            engine = model_engine_v2.AgriShieldV2Engine(models_dir=str(MODELS_DIR))
             _last_engine_mtime = cur_eng_mtime
     except Exception as e:
-        print(f"[AgriShield V2 Server] Auto-reload warning: {e}")
+        print(f"[AgriShield Server] Auto-reload warning: {e}")
     return engine
 
 
-class AgriShieldV2Handler(BaseHTTPRequestHandler):
+class AgriShieldHandler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         parsed = urlparse(self.path)
@@ -84,6 +85,14 @@ class AgriShieldV2Handler(BaseHTTPRequestHandler):
 
         if path == "/" or path == "/index.html":
             self.serve_file(BASE_DIR / "templates" / "index.html", "text/html; charset=utf-8")
+        elif path.startswith("/static/samples/"):
+            rel = path[len("/static/samples/"):]
+            file_path = SAMPLES_DIR / rel
+            if file_path.exists() and file_path.is_file():
+                mime, _ = mimetypes.guess_type(str(file_path))
+                self.serve_file(file_path, mime or "application/octet-stream")
+            else:
+                self.send_error(404, "Sample not found")
         elif path.startswith("/static/"):
             rel_path = path[len("/static/"):]
             file_path = BASE_DIR / "static" / rel_path
@@ -95,57 +104,37 @@ class AgriShieldV2Handler(BaseHTTPRequestHandler):
         elif path == "/api/models" or path == "/api/status":
             act_eng = get_active_engine()
             payload = {
-                "version": "AgriShield AI V2 (Modular 4 Specialists)",
-                "split": "70% Train : 15% Val : 15% Test",
+                "version": "AgriShield AI (Organic Biophilic Edition)",
                 "device": str(act_eng.device),
+                "models_loaded": list(act_eng.specialist_models.keys()),
+                "unified_router_loaded": act_eng.unified_model is not None,
                 "is_torch_ready": act_eng.is_torch_ready,
-                "specialists": {
-                    "rice": {"classes": 6, "model": "best_agrishield_rice.pth", "acc": "97.76%", "macro_f1": "97.75%"},
-                    "corn": {"classes": 4, "model": "best_agrishield_corn.pth", "acc": "97.77%", "macro_f1": "96.73%"},
-                    "potato": {"classes": 3, "model": "best_agrishield_potato.pth", "acc": "100.00%", "macro_f1": "100.00%"},
-                    "tomato": {"classes": 10, "model": "best_agrishield_tomato.pth", "acc": "99.85%", "macro_f1": "99.81%"}
-                },
-                "total_specialist_classes": 23
-            }
-            self.send_response(200)
-            self.send_header("Content-Type", "application/json; charset=utf-8")
-            self.end_headers()
-            self.wfile.write(json.dumps(payload, ensure_ascii=False).encode("utf-8"))
-        elif path == "/api/classes":
-            payload = {
-                "total_classes": len(recommendation_db.RECOMMENDATIONS),
-                "crops": ["Rice", "Corn", "Potato", "Tomato"],
-                "classes": list(recommendation_db.RECOMMENDATIONS.keys())
             }
             self.send_response(200)
             self.send_header("Content-Type", "application/json; charset=utf-8")
             self.end_headers()
             self.wfile.write(json.dumps(payload, ensure_ascii=False).encode("utf-8"))
         else:
-            self.send_error(404, "Not Found")
+            self.send_error(404, "Endpoint not found")
 
     def do_POST(self):
         parsed = urlparse(self.path)
         path = parsed.path
 
-        if path == "/predict" or path == "/api/predict":
+        if path in ["/predict", "/api/predict"]:
             content_type = self.headers.get("Content-Type", "")
-            if not content_type.startswith("multipart/form-data"):
-                self.send_error(400, "Bad Request: Expected multipart/form-data")
-                return
-
             content_length = int(self.headers.get("Content-Length", 0))
-            body_bytes = self.rfile.read(content_length)
+            body = self.rfile.read(content_length)
 
-            header_prefix = f"Content-Type: {content_type}\r\n\r\n".encode("latin-1")
-            msg = email.message_from_bytes(header_prefix + body_bytes)
+            raw_msg = f"Content-Type: {content_type}\r\nMIME-Version: 1.0\r\n\r\n".encode("utf-8") + body
+            msg = email.message_from_bytes(raw_msg)
 
             file_bytes = None
-            filename = None
+            filename = "upload.jpg"
             crop_filter = "all"
 
             for part in msg.walk():
-                disp = part.get("Content-Disposition", "")
+                disp = str(part.get("Content-Disposition", ""))
                 fn = part.get_filename()
                 if fn:
                     filename = fn
@@ -172,7 +161,6 @@ class AgriShieldV2Handler(BaseHTTPRequestHandler):
             with open(saved_path, "wb") as f:
                 f.write(file_bytes)
 
-            # วินิจฉัยด้วย AgriShield V2 Specialist Engine
             active_eng = get_active_engine()
             diagnosis = active_eng.predict(str(saved_path), crop_filter=crop_filter)
             top1_class = diagnosis["top1_class"]
@@ -181,7 +169,7 @@ class AgriShieldV2Handler(BaseHTTPRequestHandler):
             heatmap_filename = diagnosis.get("heatmap_path", safe_filename)
             is_healthy = diagnosis.get("is_healthy", "healthy" in top1_class.lower())
             is_out_of_scope = diagnosis.get("is_out_of_scope", top1_class.startswith("Out_of_Scope"))
-            engine_label = diagnosis.get("engine", "AgriShield V2 Specialist Model")
+            engine_label = diagnosis.get("engine", "AgriShield Specialist Model")
             recommendation = recommendation_db.get_recommendation(top1_class)
 
             if path == "/api/predict":
@@ -203,7 +191,7 @@ class AgriShieldV2Handler(BaseHTTPRequestHandler):
                 if top1_class == "Out_of_Scope___Non_Plant":
                     gradcam_caption = "ไม่แสดงผล Grad-CAM เนื่องจากระบบตรวจไม่พบเนื้อใบพืชในภาพที่อัปโหลด"
                     status_label = "ตรวจไม่พบใบพืชในภาพ (Non-Plant Image)"
-                    status_badge_style = "background:#141E19; color:#B7D9C6; border-color:#2A3F34;"
+                    status_badge_class = "status-neutral"
                 elif is_out_of_scope:
                     gradcam_caption = (
                         "พื้นที่สีเขียว-ฟ้า คือบริเวณเนื้อใบสุขภาพดีที่ระบบตรวจพบว่าคลอโรฟิลล์สมบูรณ์ไร้รอยโรค"
@@ -215,11 +203,7 @@ class AgriShieldV2Handler(BaseHTTPRequestHandler):
                         if is_healthy
                         else "พืชนอกขอบเขต 4 ชนิดหลัก · พบความผิดปกติ"
                     )
-                    status_badge_style = (
-                        "background:#082636; color:#7DD3FC; border-color:#0369A1;"
-                        if is_healthy
-                        else "background:#2B1B06; color:#FCD34D; border-color:#B45309;"
-                    )
+                    status_badge_class = "status-info" if is_healthy else "status-warning"
                 else:
                     gradcam_caption = (
                         "พื้นที่สีเขียว-ฟ้า คือบริเวณเนื้อใบสุขภาพดีที่ระบบตรวจพบว่าคลอโรฟิลล์สมบูรณ์ไร้รอยโรค"
@@ -227,11 +211,7 @@ class AgriShieldV2Handler(BaseHTTPRequestHandler):
                         else "พื้นที่สีส้ม-แดง คือตำแหน่งรอยโรคที่โมเดลตรวจพบและใช้ตัดสินใจ"
                     )
                     status_label = "ใบพืชสุขภาพดี (Healthy)" if is_healthy else "ตรวจพบรอยโรคพืช (Disease Detected)"
-                    status_badge_style = (
-                        "background:#06291B; color:#6EE7B7; border-color:#059669;"
-                        if is_healthy
-                        else "background:#2B1B06; color:#FCD34D; border-color:#B45309;"
-                    )
+                    status_badge_class = "status-healthy" if is_healthy else "status-warning"
 
                 html_content = html_content.replace("{{ recommendation.thai_name }}", recommendation.get("thai_name", ""))
                 html_content = html_content.replace("{{ recommendation.crop }}", recommendation.get("crop", ""))
@@ -241,7 +221,7 @@ class AgriShieldV2Handler(BaseHTTPRequestHandler):
                 html_content = html_content.replace("{{ heatmap_image }}", heatmap_filename)
                 html_content = html_content.replace("{{ gradcam_caption }}", gradcam_caption)
                 html_content = html_content.replace("{{ status_label }}", status_label)
-                html_content = html_content.replace("{{ status_badge_style }}", status_badge_style)
+                html_content = html_content.replace("{{ status_badge_class }}", status_badge_class)
                 html_content = html_content.replace("{{ engine_label }}", engine_label)
                 html_content = html_content.replace("{{ recommendation.cause }}", recommendation.get("cause", ""))
                 html_content = html_content.replace("{{ recommendation.symptoms }}", recommendation.get("symptoms", ""))
@@ -259,57 +239,47 @@ class AgriShieldV2Handler(BaseHTTPRequestHandler):
                             else "สำหรับภาพนี้ระบบตรวจพบร่องรอยความผิดปกติบนแผ่นใบ แต่รูปทรงสัณฐานวิทยาของใบอยู่นอกขอบเขตพืชทั้ง 4 ชนิด"
                         )
                         top2_block = f"""
-                        <div role="alert" class="print-callout mt-5 p-4 rounded-xl bg-[#082230] border border-[#124B68] text-[#E0F2FE] flex items-start gap-3.5 text-sm">
-                            <svg class="w-5 h-5 text-[#38BDF8] shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <div role="alert" class="advisory-info mt-5 p-4 rounded-2xl flex items-start gap-3.5 text-sm">
+                            <svg class="w-5 h-5 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                 <circle cx="12" cy="12" r="10"></circle>
                                 <line x1="12" y1="16" x2="12" y2="12"></line>
                                 <line x1="12" y1="8" x2="12.01" y2="8"></line>
                             </svg>
                             <div>
-                                <strong class="font-semibold text-[#F0F9FF]">การคัดกรองพืชนอกขอบเขต (Out-of-Scope Crop Detection)</strong>
-                                <p class="text-xs text-[#BAE6FD] mt-1 leading-relaxed">
-                                    สถาปัตยกรรม AgriShield AI V2 ฝึกสอน 4 โมเดลผู้เชี่ยวชาญเฉพาะพืชเศรษฐกิจหลัก (ข้าว, มะเขือเทศ, ข้าวโพด, มันฝรั่ง — รวม 23 คลาส) {ood_leaf_desc} (หากบังคับจำแนก โมเดลให้ความใกล้เคียงสูงสุดเพียง <span class="tabular-nums font-semibold">{top2_info['confidence']}%</span>)
+                                <strong class="font-semibold">หมายเหตุขอบเขตพืชที่รองรับ (Out-of-Scope Advisory)</strong>
+                                <p class="text-xs mt-1 leading-relaxed opacity-90">
+                                    ระบบถูกฝึกสอนเฉพาะโรคของ <strong>ข้าว, ข้าวโพด, มันฝรั่ง และมะเขือเทศ</strong> เท่านั้น {ood_leaf_desc}
+                                    (ความคล้ายคลึงสูงสุดในฐานข้อมูลคือ <em>{top2_thai}</em> ระดับ {top2_info['confidence']}%)
                                 </p>
                             </div>
                         </div>
                         """
                     else:
                         top2_block = f"""
-                        <div role="alert" class="print-callout mt-5 p-4 rounded-xl bg-[#241807] border border-[#784B12] text-[#FEF3C7] flex items-start gap-3.5 text-sm">
-                            <svg class="w-5 h-5 text-[#FBBF24] shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                        <div role="alert" class="advisory-warn mt-5 p-4 rounded-2xl flex items-start gap-3.5 text-sm">
+                            <svg class="w-5 h-5 shrink-0 mt-0.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
                                 <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"></path>
                                 <line x1="12" y1="9" x2="12" y2="13"></line>
                                 <line x1="12" y1="17" x2="12.01" y2="17"></line>
                             </svg>
                             <div>
-                                <strong class="font-semibold text-[#FFFBEB]">ข้อควรระวังในการวินิจฉัยแยกโรค (Differential Diagnosis Advisory)</strong>
-                                <p class="text-xs text-[#FDE68A] mt-1 leading-relaxed">
-                                    ระบบตรวจพบความเป็นไปได้อันดับที่สองคือ
-                                    <span class="font-semibold underline">{top2_thai} ({top2_info['class_name']})</span> ที่ระดับความมั่นใจ <span class="tabular-nums font-semibold">{top2_info['confidence']}%</span> แนะนำให้เปรียบเทียบลักษณะอาการร่วมกับตารางด้านล่าง
+                                <strong class="font-semibold">ข้อควรระวังในการวินิจฉัยแยกโรค (Differential Diagnosis)</strong>
+                                <p class="text-xs mt-1 leading-relaxed opacity-90">
+                                    ระบบตรวจพบความเป็นไปได้อันดับที่สองคือ <u>{top2_thai}</u> ที่ระดับความมั่นใจ <strong>{top2_info['confidence']}%</strong> แนะนำให้เปรียบเทียบลักษณะอาการร่วมกับตารางด้านล่าง
                                 </p>
                             </div>
                         </div>
                         """
-                    start_tag = "{% if top2_info %}"
-                    end_tag = "{% endif %}"
-                    if start_tag in html_content and end_tag in html_content:
-                        part1 = html_content.split(start_tag, 1)[0]
-                        part2 = html_content.rsplit(end_tag, 1)[1]
-                        html_content = part1 + top2_block + part2
+                    html_content = html_content.replace("<!-- TOP2_ADVISORY_SLOT -->", top2_block)
                 else:
-                    start_tag = "{% if top2_info %}"
-                    end_tag = "{% endif %}"
-                    if start_tag in html_content and end_tag in html_content:
-                        part1 = html_content.split(start_tag, 1)[0]
-                        part2 = html_content.rsplit(end_tag, 1)[1]
-                        html_content = part1 + part2
+                    html_content = html_content.replace("<!-- TOP2_ADVISORY_SLOT -->", "")
 
                 self.send_response(200)
                 self.send_header("Content-Type", "text/html; charset=utf-8")
                 self.end_headers()
                 self.wfile.write(html_content.encode("utf-8"))
         else:
-            self.send_error(404, "Not Found")
+            self.send_error(404, "Endpoint not found")
 
     def serve_file(self, file_path: Path, content_type: str):
         try:
@@ -330,14 +300,14 @@ class AgriShieldV2Handler(BaseHTTPRequestHandler):
 def run(port=8000):
     try:
         server_address = ("127.0.0.1", port)
-        httpd = HTTPServer(server_address, AgriShieldV2Handler)
+        httpd = HTTPServer(server_address, AgriShieldHandler)
     except OSError:
         port = 8001
         server_address = ("127.0.0.1", port)
-        httpd = HTTPServer(server_address, AgriShieldV2Handler)
+        httpd = HTTPServer(server_address, AgriShieldHandler)
 
     print(f"\n=======================================================")
-    print(f"🚀 AgriShield AI V2 พร้อมใช้งานแล้วที่: http://127.0.0.1:{port}")
+    print(f"🌿 AgriShield AI พร้อมใช้งานแล้วที่: http://127.0.0.1:{port}")
     print(f"=======================================================\n")
     try:
         import webbrowser
@@ -348,7 +318,7 @@ def run(port=8000):
     try:
         httpd.serve_forever()
     except KeyboardInterrupt:
-        print("\n[AgriShield V2 Server] ปิดการทำงานเรียบร้อย")
+        print("\n[AgriShield Server] ปิดการทำงานเรียบร้อย")
 
 
 if __name__ == "__main__":

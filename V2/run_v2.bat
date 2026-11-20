@@ -1,10 +1,10 @@
 @echo off
 chcp 65001 > nul
-title AgriShield AI V2 — Multi-Model Specialist App
+title AgriShield AI — Plant Disease Specialist App
 echo =====================================================================
-echo 🚀 กำลังเริ่มต้นระบบ AgriShield AI V2 (สถาปัตยกรรม 4 โมเดลผู้เชี่ยวชาญ)...
+echo 🌿 กำลังเริ่มต้นระบบ AgriShield AI (Organic Biophilic Edition)...
 echo 🌾 Rice (6 คลาส)  -  🌽 Corn (4 คลาส)  -  🥔 Potato (3 คลาส)  -  🍅 Tomato (10 คลาส)
-echo 📊 สัดส่วนข้อมูล: Train 70%% : Val 15%% : Test 15%%
+echo 📊 สถาปัตยกรรม: 4 Modular Specialist Models + Grad-CAM + Biocontrol (SDG 12)
 echo 🌐 กำลังเปิดเว็บแอปพลิเคชันที่: http://127.0.0.1:8000
 echo =====================================================================
 
