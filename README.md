@@ -62,7 +62,7 @@ pip install -r V2/requirements.txt
   ```cmd
   run.bat
   ```
-  *(หรือ `run_v2.bat` / `run_v3.bat` — ระบบจะตรวจหา Python ในเครื่องและเปิดเบราว์เซอร์ให้อัตโนมัติทันทีที่พอร์ต 8000)*
+  *(หรือ `run_v2.bat` — ระบบจะตรวจหา Python ในเครื่องและเปิดเบราว์เซอร์ให้อัตโนมัติทันทีที่พอร์ต 8000)*
 
 * **วิธีที่ 2 (ผ่าน Command Line / Terminal):**
   ```bash
@@ -92,8 +92,7 @@ pip install -r V2/requirements.txt
 ```
 Agrishield/
 ├── run.bat                 # Script รันระบบหลัก (คลิกเดียวรันทันทีบน Port 8000)
-├── run_v2.bat              # Script รันระบบ V2 จาก Root บน Port 8000
-├── run_v3.bat              # Script รันระบบ V3 จาก Root บน Port 8000
+├── run_v2.bat              # Script รันระบบสำรอง (เรียกใช้ run.bat บน Port 8000)
 ├── README.md               # เอกสารคู่มือการติดตั้งและรันระบบ
 ├── PRODUCT.md              # สเปกผลิตภัณฑ์และข้อมูลโมเดล
 └── V2/                     # ซอร์สโค้ดระบบ AgriShield AI (Organic Biophilic Edition)
