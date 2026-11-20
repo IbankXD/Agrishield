@@ -59,18 +59,23 @@ pip install -r V2/requirements.txt
 
 * **วิธีที่ 1 (แนะนำ - สะดวกที่สุด):**
   ดับเบิลคลิกที่ไฟล์:
-  ```cmd
-  run_v2.bat
-  ```
+  * `run_v3.bat` เพื่อรันเวอร์ชัน **V3 Organic Biophilic Edition** (พอร์ต 8002)
+  * หรือ `run_v2.bat` เพื่อรันเวอร์ชัน **V2 Modern Emerald Edition** (พอร์ต 8000)
   *(ระบบจะตรวจหา Python ในเครื่องและเปิดเบราว์เซอร์ให้อัตโนมัติ)*
 
 * **วิธีที่ 2 (ผ่าน Command Line / Terminal):**
-  ```bash
-  cd V2
-  python server.py 8000
-  ```
-
-เปิดเบราว์เซอร์ไปที่: **http://127.0.0.1:8000** (หรือ **http://127.0.0.1:8001** หากพอร์ต 8000 ไม่ว่าง)
+  * สำหรับ V3:
+    ```bash
+    cd V3
+    python server.py 8002
+    ```
+    เปิดเบราว์เซอร์ไปที่: **http://127.0.0.1:8002**
+  * สำหรับ V2:
+    ```bash
+    cd V2
+    python server.py 8000
+    ```
+    เปิดเบราว์เซอร์ไปที่: **http://127.0.0.1:8000** (หรือ **http://127.0.0.1:8001**)
 
 ---
 
@@ -92,11 +97,18 @@ pip install -r V2/requirements.txt
 
 ```
 Agrishield/
-├── run_v2.bat              # Script รันระบบ V2 จาก Root (ค้นหา Python อัตโนมัติ)
+├── run_v3.bat              # Script รันระบบ V3 (Organic Biophilic) บน Port 8002
+├── run_v2.bat              # Script รันระบบ V2 จาก Root บน Port 8000
 ├── README.md               # เอกสารคู่มือการติดตั้งและรันระบบ
 ├── PRODUCT.md              # สเปกผลิตภัณฑ์และข้อมูลโมเดล
+├── V3/                     # ซอร์สโค้ดระบบ AgriShield AI V3 (Organic Biophilic Edition)
+│   ├── server.py           # Web Server บน Port 8002
+│   ├── run_v3.bat          # สคริปต์คลิกรันเฉพาะโฟลเดอร์ V3
+│   └── templates/          # หน้าจอ V3 Biophilic UI
+│       ├── index.html
+│       └── result.html
 └── V2/                     # ซอร์สโค้ดระบบ AgriShield AI V2
-    ├── server.py           # Web Server (Python http.server บน Port 8001)
+    ├── server.py           # Web Server บน Port 8000 (fallback 8001)
     ├── model_engine_v2.py  # AI Model Engine (Multi-Model + Grad-CAM + OOD Filter)
     ├── recommendation_db.py# ฐานข้อมูลสารชีวภัณฑ์ 23 คลาส (SDG 12)
     ├── requirements.txt    # รายการแพ็กเกจ Python (torch, torchvision, numpy, pillow)
